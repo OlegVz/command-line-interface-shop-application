@@ -18,13 +18,13 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    private long id;
+    private Long id;
 
     @Column(name = "name")
     private String name;
 
     @Column(name = "price")
-    private int price;
+    private Integer price;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)

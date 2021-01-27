@@ -16,5 +16,4 @@ public class ShopApplication {
 
         context.close();
     }
-
 }
