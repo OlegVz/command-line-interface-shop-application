@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "users")
-@EqualsAndHashCode(of = {"id", "email"})
+@EqualsAndHashCode(of = {"id", "email", "password"})
 @ToString(of = {"id", "email"})
 public class User {
 

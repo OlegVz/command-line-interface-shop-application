@@ -1,8 +1,8 @@
 package com.hybris.shop;
 
-import com.hybris.shop.config.ShopApplicationConfig;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.PropertySource;
 
 @SpringBootApplication
@@ -10,9 +10,7 @@ import org.springframework.context.annotation.PropertySource;
 public class ShopApplication {
 
     public static void main(String[] args) {
-
-        AnnotationConfigApplicationContext context =
-                new AnnotationConfigApplicationContext(ShopApplicationConfig.class);
+        ConfigurableApplicationContext context = SpringApplication.run(ShopApplication.class, args);
 
         context.close();
     }

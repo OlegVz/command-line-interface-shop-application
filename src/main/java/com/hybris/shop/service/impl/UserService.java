@@ -1,6 +1,7 @@
 package com.hybris.shop.service.impl;
 
 import com.hybris.shop.exceptions.UserNotFoundByIdException;
+import com.hybris.shop.exceptions.UserWithSuchEmailExistException;
 import com.hybris.shop.model.User;
 import com.hybris.shop.repository.UserRepository;
 import com.hybris.shop.service.UserServiceInterface;
@@ -24,6 +25,11 @@ public class UserService implements UserServiceInterface {
 
     @Override
     public User save(User user) {
+        String email = user.getEmail();
+        if (userRepository.existsByEmail(email)) {
+            throw new UserWithSuchEmailExistException(email);
+        }
+
         return userRepository.save(user);
     }
 
@@ -34,6 +40,10 @@ public class UserService implements UserServiceInterface {
 
     @Override
     public void deleteById(Long id) {
-        userRepository.deleteById(id);
+        if (userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+        } else {
+            throw new UserNotFoundByIdException(id);
+        }
     }
 }
