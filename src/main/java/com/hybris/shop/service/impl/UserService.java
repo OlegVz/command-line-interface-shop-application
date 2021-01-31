@@ -1,7 +1,7 @@
 package com.hybris.shop.service.impl;
 
-import com.hybris.shop.exceptions.UserNotFoundByIdException;
-import com.hybris.shop.exceptions.UserWithSuchEmailExistException;
+import com.hybris.shop.exceptions.userExceptions.UserNotFoundByIdException;
+import com.hybris.shop.exceptions.userExceptions.UserWithSuchEmailExistException;
 import com.hybris.shop.model.User;
 import com.hybris.shop.repository.UserRepository;
 import com.hybris.shop.service.UserServiceInterface;

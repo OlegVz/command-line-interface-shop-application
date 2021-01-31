@@ -1,4 +1,4 @@
-package com.hybris.shop.exceptions;
+package com.hybris.shop.exceptions.userExceptions;
 
 public class UserWithSuchEmailExistException extends RuntimeException {
     public UserWithSuchEmailExistException(String email) {

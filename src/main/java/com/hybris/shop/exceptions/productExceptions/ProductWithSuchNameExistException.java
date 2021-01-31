@@ -1,4 +1,4 @@
-package com.hybris.shop.exceptions;
+package com.hybris.shop.exceptions.productExceptions;
 
 public class ProductWithSuchNameExistException extends RuntimeException{
     public ProductWithSuchNameExistException(String productName) {

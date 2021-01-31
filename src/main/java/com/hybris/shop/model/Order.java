@@ -5,7 +5,6 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -28,7 +27,7 @@ public class Order {
     private String status;
 
     @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    private String createdAt;
 
     @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
     List<OrderItem> orderItems;

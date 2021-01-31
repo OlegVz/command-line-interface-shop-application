@@ -1,8 +1,8 @@
 package com.hybris.shop.service.impl;
 
-import com.hybris.shop.exceptions.ProductNotFoundByIdException;
-import com.hybris.shop.exceptions.ProductWithSuchNameExistException;
-import com.hybris.shop.exceptions.ProductWithSuchNameNotExistException;
+import com.hybris.shop.exceptions.productExceptions.ProductNotFoundByIdException;
+import com.hybris.shop.exceptions.productExceptions.ProductWithSuchNameExistException;
+import com.hybris.shop.exceptions.productExceptions.ProductWithSuchNameNotExistException;
 import com.hybris.shop.model.Product;
 import com.hybris.shop.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -113,7 +113,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenProductWithSuchIdNotExist() {
+    void shouldThrowExceptionWhenFindProductWithSuchIdNotExist() {
         //given
         //when
         when(productRepository.findById(anyLong())).thenThrow(new ProductNotFoundByIdException(NOT_EXIST_ID));

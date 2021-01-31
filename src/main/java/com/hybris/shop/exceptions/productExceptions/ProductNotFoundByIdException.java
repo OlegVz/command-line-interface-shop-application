@@ -1,4 +1,4 @@
-package com.hybris.shop.exceptions;
+package com.hybris.shop.exceptions.productExceptions;
 
 public class ProductNotFoundByIdException extends RuntimeException{
     public ProductNotFoundByIdException(Long id) {
