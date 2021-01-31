@@ -1,6 +1,7 @@
 package com.hybris.shop.service.impl;
 
 import com.hybris.shop.exceptions.ProductNotFoundByIdException;
+import com.hybris.shop.exceptions.ProductWithSuchNameExistException;
 import com.hybris.shop.exceptions.ProductWithSuchNameNotExistException;
 import com.hybris.shop.model.Product;
 import com.hybris.shop.repository.ProductRepository;
@@ -26,6 +27,11 @@ public class ProductService implements ProductServiceInterface {
 
     @Override
     public Product save(Product product) {
+        String productName = product.getName();
+        if (productRepository.existsByName(productName)) {
+            throw new ProductWithSuchNameExistException(productName);
+        }
+
         return productRepository.save(product);
     }
 
@@ -36,6 +42,10 @@ public class ProductService implements ProductServiceInterface {
 
     @Override
     public void deleteById(Long id) {
-        productRepository.deleteById(id);
+        if (productRepository.existsById(id)) {
+            productRepository.deleteById(id);
+        } else {
+            throw new ProductNotFoundByIdException(id);
+        }
     }
 }
