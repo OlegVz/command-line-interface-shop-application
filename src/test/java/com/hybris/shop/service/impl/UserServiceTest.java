@@ -68,7 +68,7 @@ class UserServiceTest {
         //when
         when(userRepository.existsByEmail(anyString())).thenReturn(true);
 
-        boolean existByEmail = userService.existByEmail(TEST_EMAIL);
+        boolean existByEmail = userService.existsByEmail(TEST_EMAIL);
 
         //then
         assertTrue(existByEmail);
@@ -80,7 +80,7 @@ class UserServiceTest {
         //when
         when(userRepository.existsByEmail(anyString())).thenReturn(false);
 
-        boolean existByEmail = userService.existByEmail(TEST_EMAIL);
+        boolean existByEmail = userService.existsByEmail(TEST_EMAIL);
 
         //then
         assertFalse(existByEmail);

@@ -41,6 +41,11 @@ public class ProductService implements ProductServiceInterface {
     }
 
     @Override
+    public boolean existsById(Long id) {
+        return productRepository.existsById(id);
+    }
+
+    @Override
     public void deleteById(Long id) {
         if (productRepository.existsById(id)) {
             productRepository.deleteById(id);

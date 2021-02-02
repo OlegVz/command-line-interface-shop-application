@@ -51,6 +51,11 @@ public class OrderItemService implements ServiceInterface<OrderItem, OrderItemId
     }
 
     @Override
+    public boolean existsById(OrderItemId id) {
+        return orderItemRepository.existsById(id);
+    }
+
+    @Override
     public void deleteById(OrderItemId id) {
         if (orderItemRepository.existsById(id)) {
             orderItemRepository.deleteById(id);

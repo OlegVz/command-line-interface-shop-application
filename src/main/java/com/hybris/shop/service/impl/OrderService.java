@@ -37,6 +37,11 @@ public class OrderService implements ServiceInterface<Order, Long> {
     }
 
     @Override
+    public boolean existsById(Long id) {
+        return orderRepository.existsById(id);
+    }
+
+    @Override
     public void deleteById(Long id) {
         if (orderRepository.existsById(id)) {
             orderRepository.deleteById(id);

@@ -9,6 +9,8 @@ public interface ServiceInterface<T, U> {
 
     T findById(U id);
 
+    boolean existsById(U id);
+
     default T update(U id, T newDataObject) {
         T objectToUpdate = findById(id);
 

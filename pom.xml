@@ -17,6 +17,7 @@
 	<properties>
 		<java.version>11</java.version>
 		<h2.version>1.4.200</h2.version>
+		<modelmapper.vercion>2.3.9</modelmapper.vercion>
 		<spring-data-jpa.version>2.4.3</spring-data-jpa.version>
 	</properties>
 
@@ -58,7 +59,14 @@
 			<version>${h2.version}</version>
 			<scope>test</scope>
 		</dependency>
-    </dependencies>
+
+		<dependency>
+			<groupId>org.modelmapper</groupId>
+			<artifactId>modelmapper</artifactId>
+			<version>${modelmapper.vercion}</version>
+		</dependency>
+
+	</dependencies>
 
 	<build>
 		<plugins>
