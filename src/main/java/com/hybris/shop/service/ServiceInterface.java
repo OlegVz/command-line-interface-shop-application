@@ -4,17 +4,17 @@ import org.springframework.util.ReflectionUtils;
 
 import java.util.Arrays;
 
-public interface ServiceInterface<T> {
+public interface ServiceInterface<T, U> {
     T save(T object);
 
-    T findById(Long id);
+    T findById(U id);
 
-    default T update(Long id, T newDataObject) {
+    default T update(U id, T newDataObject) {
         T objectToUpdate = findById(id);
 
-        Class<?> userClass = newDataObject.getClass();
+        Class<?> objectClass = newDataObject.getClass();
 
-        Arrays.stream(userClass.getDeclaredFields())
+        Arrays.stream(objectClass.getDeclaredFields())
                 .forEach(field -> {
                     try {
                         field.setAccessible(true);
@@ -32,5 +32,5 @@ public interface ServiceInterface<T> {
         return save(objectToUpdate);
     }
 
-    void deleteById(Long id);
+    void deleteById(U id);
 }

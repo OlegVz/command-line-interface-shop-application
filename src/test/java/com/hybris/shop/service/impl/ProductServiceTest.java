@@ -113,7 +113,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenFindProductWithSuchIdNotExist() {
+    void shouldThrowExceptionWhenFindProductByNotExistId() {
         //given
         //when
         when(productRepository.findById(anyLong())).thenThrow(new ProductNotFoundByIdException(NOT_EXIST_ID));
@@ -232,6 +232,7 @@ class ProductServiceTest {
         //given
         //when
         when(productRepository.existsById(anyLong())).thenReturn(true);
+
         productService.deleteById(PRODUCT_ID);
 
         //then

@@ -99,7 +99,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenFindOrderWithSuchIdNotExist() {
+    void shouldThrowExceptionWhenFindOrderByNotExistId() {
         //given
         //when
         when(orderRepository.findById(anyLong())).thenThrow(new OrderNotFoundByIdException(NOT_EXISTING_ORDER_ID));
@@ -193,6 +193,7 @@ class OrderServiceTest {
         //given
         //when
         when(orderRepository.existsById(anyLong())).thenReturn(true);
+
         orderService.deleteById(ORDER_ID);
 
         //then

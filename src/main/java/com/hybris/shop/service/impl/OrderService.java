@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class OrderService implements ServiceInterface<Order> {
+public class OrderService implements ServiceInterface<Order, Long> {
 
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;

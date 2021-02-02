@@ -99,7 +99,7 @@ class UserServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenUserWithSuchIdNotExist() {
+    void shouldThrowExceptionWhenFindUserByNotExistId() {
         //given
         //when
         when(userRepository.findById(anyLong())).thenThrow(new UserNotFoundByIdException(NOT_EXIST_ID));
@@ -179,6 +179,7 @@ class UserServiceTest {
         //given
         //when
         when(userRepository.existsById(anyLong())).thenReturn(true);
+
         userService.deleteById(USER_ID);
 
         //then
