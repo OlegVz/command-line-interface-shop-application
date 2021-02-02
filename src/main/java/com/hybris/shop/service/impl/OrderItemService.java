@@ -1,0 +1,62 @@
+package com.hybris.shop.service.impl;
+
+import com.hybris.shop.exceptions.orderExceptions.OrderNotFoundByIdException;
+import com.hybris.shop.exceptions.orderItemExceptions.OrderItemNotFoundByIdException;
+import com.hybris.shop.exceptions.productExceptions.ProductNotFoundByIdException;
+import com.hybris.shop.model.OrderItem;
+import com.hybris.shop.model.idClasses.OrderItemId;
+import com.hybris.shop.repository.OrderItemRepository;
+import com.hybris.shop.repository.OrderRepository;
+import com.hybris.shop.repository.ProductRepository;
+import com.hybris.shop.service.ServiceInterface;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class OrderItemService implements ServiceInterface<OrderItem, OrderItemId> {
+
+    private final OrderItemRepository orderItemRepository;
+    private final OrderRepository orderRepository;
+    private final ProductRepository productRepository;
+
+    @Autowired
+    public OrderItemService(OrderItemRepository orderItemRepository,
+                            OrderRepository orderRepository,
+                            ProductRepository productRepository) {
+        this.orderItemRepository = orderItemRepository;
+        this.orderRepository = orderRepository;
+        this.productRepository = productRepository;
+    }
+
+    @Override
+    public OrderItem save(OrderItem orderItem) {
+        Long orderId = orderItem.getOrder().getId();
+        Long productId = orderItem.getProduct().getId();
+
+        if (!orderRepository.existsById(orderId)) {
+            throw new OrderNotFoundByIdException(orderId);
+        }
+
+        if (!productRepository.existsById(productId)) {
+            throw new ProductNotFoundByIdException(productId);
+        }
+
+        return orderItemRepository.save(orderItem);
+    }
+
+    @Override
+    public OrderItem findById(OrderItemId id) {
+        return orderItemRepository.findById(id)
+                .orElseThrow(() -> new OrderItemNotFoundByIdException(id));
+    }
+
+    @Override
+    public void deleteById(OrderItemId id) {
+        if (orderItemRepository.existsById(id)) {
+            orderItemRepository.deleteById(id);
+        } else {
+            throw new OrderItemNotFoundByIdException(id);
+        }
+    }
+
+}
