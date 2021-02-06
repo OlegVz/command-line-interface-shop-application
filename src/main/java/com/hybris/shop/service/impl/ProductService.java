@@ -9,6 +9,8 @@ import com.hybris.shop.service.ProductServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ProductService implements ProductServiceInterface {
 
@@ -52,5 +54,10 @@ public class ProductService implements ProductServiceInterface {
         } else {
             throw new ProductNotFoundByIdException(id);
         }
+    }
+
+    @Override
+    public List<Product> sortProductsByNumberOfOrdersDesc() {
+        return productRepository.sortProductsByNumberOfOrdersDesc();
     }
 }

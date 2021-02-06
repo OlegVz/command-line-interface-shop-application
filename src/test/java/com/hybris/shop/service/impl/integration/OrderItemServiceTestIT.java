@@ -22,13 +22,13 @@ public class OrderItemServiceTestIT {
     private OrderItem orderItem;
 
     @Autowired
-    OrderItemService orderItemService;
+    private OrderItemService orderItemService;
 
     @Autowired
-    OrderRepository orderRepository;
+    private OrderRepository orderRepository;
 
     @Autowired
-    ProductRepository productRepository;
+    private ProductRepository productRepository;
 
     @BeforeEach
     public void init() {
