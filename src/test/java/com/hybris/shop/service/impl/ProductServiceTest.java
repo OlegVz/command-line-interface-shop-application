@@ -30,11 +30,11 @@ class ProductServiceTest {
     private static final Product.ProductStatus PRODUCT_STATUS = Product.ProductStatus.IN_STOCK;
     private static final LocalDateTime DATE_TIME =
             LocalDateTime.of(2021, 1, 30, 12, 56);
-    public static final long NOT_EXIST_ID = 0L;
-    public static final String NEW_PRODUCT_NAME = "New product name";
-    public static final int NEW_PRICE = 456;
-    public static final Product.ProductStatus NEW_PRODUCT_STATUS = Product.ProductStatus.RUNNING_LOW;
-    public static final LocalDateTime NEW_DATE_TIME =
+    private static final long NOT_EXIST_ID = 0L;
+    private static final String NEW_PRODUCT_NAME = "New product name";
+    private static final int NEW_PRICE = 456;
+    private static final Product.ProductStatus NEW_PRODUCT_STATUS = Product.ProductStatus.RUNNING_LOW;
+    private static final LocalDateTime NEW_DATE_TIME =
             LocalDateTime.of(2022, 2, 15, 14, 48);
 
     private Product productInDB;
