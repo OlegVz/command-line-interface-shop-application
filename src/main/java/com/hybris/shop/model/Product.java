@@ -34,7 +34,7 @@ public class Product {
     private LocalDateTime createdAt;
 
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
     private List<OrderItem> orderItems;
 
     public enum ProductStatus{
