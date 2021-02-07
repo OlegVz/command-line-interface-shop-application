@@ -1,5 +1,7 @@
 package com.hybris.shop.facade;
 
+import java.util.List;
+
 public interface FacadeInterface <T, U, V> {
     T save(U object);
 
@@ -10,4 +12,6 @@ public interface FacadeInterface <T, U, V> {
     boolean existsById(V id);
 
     void deleteById(V id);
+
+    List<T> findAll();
 }

@@ -3,6 +3,7 @@ package com.hybris.shop.service;
 import org.springframework.util.ReflectionUtils;
 
 import java.util.Arrays;
+import java.util.List;
 
 public interface ServiceInterface<T, U> {
     T save(T object);
@@ -35,4 +36,6 @@ public interface ServiceInterface<T, U> {
     }
 
     void deleteById(U id);
+
+    List<T> findAll();
 }

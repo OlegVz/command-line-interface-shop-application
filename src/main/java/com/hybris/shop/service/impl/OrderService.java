@@ -9,6 +9,10 @@ import com.hybris.shop.service.ServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 @Service
 public class OrderService implements ServiceInterface<Order, Long> {
 
@@ -48,5 +52,11 @@ public class OrderService implements ServiceInterface<Order, Long> {
         } else {
             throw new OrderNotFoundByIdException(id);
         }
+    }
+
+    @Override
+    public List<Order> findAll() {
+        return StreamSupport.stream(orderRepository.findAll().spliterator(), false)
+                .collect(Collectors.toList());
     }
 }

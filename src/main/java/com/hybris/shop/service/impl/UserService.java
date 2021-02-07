@@ -8,6 +8,10 @@ import com.hybris.shop.service.UserServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 @Service
 public class UserService implements UserServiceInterface {
 
@@ -50,5 +54,11 @@ public class UserService implements UserServiceInterface {
         } else {
             throw new UserNotFoundByIdException(id);
         }
+    }
+
+    @Override
+    public List<User> findAll() {
+        return StreamSupport.stream(userRepository.findAll().spliterator(), false)
+                .collect(Collectors.toList());
     }
 }
