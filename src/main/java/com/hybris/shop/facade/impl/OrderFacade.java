@@ -30,15 +30,16 @@ public class OrderFacade implements OrderFacadeInterface {
     @Override
     public OrderDto save(NewOrderDto newOrderDto) {
         newOrderDto.setCreatedAt(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
+        Order savedOrderItem = orderService.save(orderMapper.toEntityFromNewOrderDto(newOrderDto));
 
-        Order order = orderMapper.toEntityFromNewOrderDto(newOrderDto);
-
-        return orderMapper.toOrderDtoFromEntity(orderService.save(order));
+        return orderMapper.toOrderDtoFromEntity(savedOrderItem);
     }
 
     @Override
     public OrderDto findById(Long id) {
-        return orderMapper.toOrderDtoFromEntity(orderService.findById(id));
+        Order orderById = orderService.findById(id);
+
+        return orderMapper.toOrderDtoFromEntity(orderById);
     }
 
     @Override

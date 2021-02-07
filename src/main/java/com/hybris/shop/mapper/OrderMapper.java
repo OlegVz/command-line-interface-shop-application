@@ -11,18 +11,15 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.Objects;
-import java.util.Optional;
 
 @Component
 public class OrderMapper {
 
-    private ModelMapper modelMapper;
-    private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public OrderMapper(ModelMapper modelMapper, UserRepository userRepository) {
+    public OrderMapper(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
-        this.userRepository = userRepository;
     }
 
     @PostConstruct
@@ -44,10 +41,6 @@ public class OrderMapper {
 
     public OrderDto toOrderDtoFromEntity(Order order) {
         return Objects.isNull(order) ? null : modelMapper.map(order, OrderDto.class);
-    }
-
-    public Order toEntityFromOrderDto(OrderDto orderDto) {
-        return Objects.isNull(orderDto) ? null : modelMapper.map(orderDto, Order.class);
     }
 
     public Order toEntityFromNewOrderDto(NewOrderDto newOrderDto) {

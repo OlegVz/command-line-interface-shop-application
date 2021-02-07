@@ -48,9 +48,9 @@ public class UserFacade implements UserFacadeInterface {
 
     @Override
     public UserDto findById(Long id) throws UserNotFoundByIdException {
-        User byId = userService.findById(id);
+        User userById = userService.findById(id);
 
-        return userMapper.toUserDtoFromUser(byId);
+        return userMapper.toUserDtoFromUser(userById);
     }
 
     @Override

@@ -35,7 +35,9 @@ public class ProductFacade implements ProductFacadeInterface {
 
     @Override
     public ProductDto findById(Long id) {
-        return productMapper.fromEntityToProductDto(productService.findById(id));
+        Product productById = productService.findById(id);
+
+        return productMapper.fromEntityToProductDto(productById);
     }
 
     @Override
