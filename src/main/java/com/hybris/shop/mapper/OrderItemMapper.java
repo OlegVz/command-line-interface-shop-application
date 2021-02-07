@@ -17,7 +17,7 @@ import java.util.Objects;
 @Component
 public class OrderItemMapper {
 
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
     @Autowired
     public OrderItemMapper(ModelMapper modelMapper) {

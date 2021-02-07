@@ -11,7 +11,7 @@ import java.util.Objects;
 @Component
 public class ProductMapper {
 
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
     public ProductMapper(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
