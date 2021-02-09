@@ -17,10 +17,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
@@ -38,10 +39,7 @@ class OrderItemServiceTest {
     private OrderItem orderItemInDb;
     private OrderItem newOrderItem;
     private OrderItem orderItemWithNotExistingId;
-    private Order order;
     private Order orderWithNotExistingId;
-    private Product product;
-    private Product productWithNotExistingId;
 
     @InjectMocks
     private OrderItemService orderItemService;
@@ -63,10 +61,10 @@ class OrderItemServiceTest {
         NOT_EXISTING_ORDER_ITEM_ID.setOrder(NOT_EXISTING_ORDER_ID);
         NOT_EXISTING_ORDER_ITEM_ID.setProduct(NOT_EXISTING_PRODUCT_ID);
 
-        order = new Order();
+        Order order = new Order();
         order.setId(ORDER_ID);
 
-        product = new Product();
+        Product product = new Product();
         product.setId(PRODUCT_ID);
 
         orderWithNotExistingId = new Order();
@@ -76,7 +74,7 @@ class OrderItemServiceTest {
         orderItemInDb.setProduct(product);
         orderItemInDb.setOrder(order);
 
-        productWithNotExistingId = new Product();
+        Product productWithNotExistingId = new Product();
         productWithNotExistingId.setId(NOT_EXISTING_PRODUCT_ID);
 
         newOrderItem = new OrderItem();
@@ -190,6 +188,30 @@ class OrderItemServiceTest {
     }
 
     @Test
+    void shouldReturnTrueWhenExistById() {
+        //given
+        //when
+        when(orderItemRepository.existsById(ORDER_ITEM_ID)).thenReturn(true);
+
+        boolean b = orderItemService.existsById(ORDER_ITEM_ID);
+
+        //then
+        assertTrue(b);
+    }
+
+    @Test
+    void shouldReturnFalseWhenExistById() {
+        //given
+        //when
+        when(orderItemRepository.existsById(NOT_EXISTING_ORDER_ITEM_ID)).thenReturn(false);
+
+        boolean b = orderItemService.existsById(NOT_EXISTING_ORDER_ITEM_ID);
+
+        //then
+        assertFalse(b);
+    }
+
+    @Test
     void shouldDeleteOrderItemById() {
         //given
         //when
@@ -214,5 +236,23 @@ class OrderItemServiceTest {
 
         assertEquals(String.format("Order item with id %s was not found", NOT_EXISTING_ORDER_ITEM_ID),
                 exception.getMessage());
+    }
+
+    @Test
+    void shouldFindAndReturnAllOrderItemsInDb() {
+        //given
+        List<OrderItem> orderItemsInDb = List.of(this.orderItemInDb);
+        Iterable<OrderItem> orderItemIterable = orderItemsInDb;
+
+        //when
+        when(orderItemRepository.findAll()).thenReturn(orderItemIterable);
+
+        List<OrderItem> orderItems = orderItemService.findAll();
+
+        //then
+        assertEquals(orderItemsInDb.size(), orderItems.size());
+        for (int i = 0; i < orderItems.size(); i++) {
+            assertEquals(orderItemsInDb.get(i), orderItems.get(i));
+        }
     }
 }

@@ -7,7 +7,7 @@ import com.hybris.shop.dto.UserDto;
 import java.util.List;
 
 public interface UserFacadeInterface extends FacadeInterface<UserDto, NewUserDto, Long> {
-    boolean existByEmail(String email);
+    boolean existsByEmail(String email);
 
     List<OrderDto> findAllUserOrders(Long userId);
 }

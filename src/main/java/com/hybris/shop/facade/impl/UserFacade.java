@@ -34,7 +34,7 @@ public class UserFacade implements UserFacadeInterface {
     }
 
     @Override
-    public boolean existByEmail(String email) {
+    public boolean existsByEmail(String email) {
         return userService.existsByEmail(email);
     }
 

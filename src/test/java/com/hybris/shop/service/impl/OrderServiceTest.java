@@ -13,10 +13,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
@@ -35,9 +36,7 @@ class OrderServiceTest {
 
     private Order orderInDb;
     private Order newOrder;
-    private User userInDb;
     private User userWithNotExistingId;
-    private User newUser;
 
     @InjectMocks
     private OrderService orderService;
@@ -53,7 +52,7 @@ class OrderServiceTest {
         userWithNotExistingId = new User();
         userWithNotExistingId.setId(NOT_EXISTING_USER_ID);
 
-        userInDb = new User();
+        User userInDb = new User();
         userInDb.setId(USER_ID);
 
         orderInDb = new Order();
@@ -62,7 +61,7 @@ class OrderServiceTest {
         orderInDb.setStatus(ORDER_STATUS);
         orderInDb.setCreatedAt(CREATED_AT);
 
-        newUser = new User();
+        User newUser = new User();
         newUser.setId(NEW_USER_ID);
 
         newOrder = new Order();
@@ -189,6 +188,30 @@ class OrderServiceTest {
     }
 
     @Test
+    void shouldReturnTrueWhenExistById() {
+        //given
+        //when
+        when(orderRepository.existsById(anyLong())).thenReturn(true);
+
+        boolean b = orderService.existsById(ORDER_ID);
+
+        //then
+        assertTrue(b);
+    }
+
+    @Test
+    void shouldReturnFalseWhenExistById() {
+        //given
+        //when
+        when(orderRepository.existsById(anyLong())).thenReturn(false);
+
+        boolean b = orderService.existsById(NOT_EXISTING_ORDER_ID);
+
+        //then
+        assertFalse(b);
+    }
+
+    @Test
     void shouldDeleteOrderById() {
         //given
         //when
@@ -212,5 +235,22 @@ class OrderServiceTest {
                 assertThrows(OrderNotFoundByIdException.class, () -> orderService.deleteById(NOT_EXISTING_ORDER_ID));
 
         assertEquals(String.format("Order with id %s was not found", NOT_EXISTING_ORDER_ID), exception.getMessage());
+    }
+
+    @Test
+    void shouldFindAndReturnAllOrdersInDb() {
+        //given
+        List<Order> ordersInDb = List.of(this.orderInDb);
+        Iterable<Order> orderIterable = ordersInDb;
+
+        //when
+        when(orderRepository.findAll()).thenReturn(orderIterable);
+
+        List<Order> orders = orderService.findAll();
+
+        //then
+        for (int i = 0; i < orders.size(); i++) {
+            assertEquals(ordersInDb.get(i), orders.get(i));
+        }
     }
 }
