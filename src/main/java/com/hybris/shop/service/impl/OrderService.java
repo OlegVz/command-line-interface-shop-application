@@ -9,6 +9,10 @@ import com.hybris.shop.service.ServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 @Service
 public class OrderService implements ServiceInterface<Order, Long> {
 
@@ -37,11 +41,22 @@ public class OrderService implements ServiceInterface<Order, Long> {
     }
 
     @Override
+    public boolean existsById(Long id) {
+        return orderRepository.existsById(id);
+    }
+
+    @Override
     public void deleteById(Long id) {
         if (orderRepository.existsById(id)) {
             orderRepository.deleteById(id);
         } else {
             throw new OrderNotFoundByIdException(id);
         }
+    }
+
+    @Override
+    public List<Order> findAll() {
+        return StreamSupport.stream(orderRepository.findAll().spliterator(), false)
+                .collect(Collectors.toList());
     }
 }

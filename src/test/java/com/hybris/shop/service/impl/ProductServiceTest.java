@@ -13,10 +13,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -228,6 +228,30 @@ class ProductServiceTest {
     }
 
     @Test
+    void shouldReturnTrueWhenExistById() {
+        //given
+        //when
+        when(productRepository.existsById(anyLong())).thenReturn(true);
+
+        boolean b = productService.existsById(PRODUCT_ID);
+
+        //then
+        assertTrue(b);
+    }
+
+    @Test
+    void shouldReturnFalseWhenExistById() {
+        //given
+        //when
+        when(productRepository.existsById(anyLong())).thenReturn(false);
+
+        boolean b = productService.existsById(NOT_EXIST_ID);
+
+        //then
+        assertFalse(b);
+    }
+
+    @Test
     void shouldDeleteProductById() {
         //given
         //when
@@ -251,4 +275,22 @@ class ProductServiceTest {
                 assertThrows(ProductNotFoundByIdException.class, () -> productService.deleteById(NOT_EXIST_ID));
         assertEquals(String.format("Product with id %s was not found", NOT_EXIST_ID), exception.getMessage());
     }
+
+    @Test
+    void shouldFindAndReturnAllProductsInDb() {
+        //given
+        List<Product> productsInDB = List.of(this.productInDB);
+        Iterable<Product> productIterable = productsInDB;
+        //when
+        when(productRepository.findAll()).thenReturn(productIterable);
+
+        List<Product> products = productService.findAll();
+
+        //then
+        assertEquals(productsInDB.size(), products.size());
+
+        for (int i = 0; i < products.size(); i++) {
+            assertEquals(productsInDB.get(i), products.get(i));
+        }
     }
+}

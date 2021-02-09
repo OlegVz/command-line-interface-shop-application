@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class ProductService implements ProductServiceInterface {
@@ -43,12 +45,23 @@ public class ProductService implements ProductServiceInterface {
     }
 
     @Override
+    public boolean existsById(Long id) {
+        return productRepository.existsById(id);
+    }
+
+    @Override
     public void deleteById(Long id) {
         if (productRepository.existsById(id)) {
             productRepository.deleteById(id);
         } else {
             throw new ProductNotFoundByIdException(id);
         }
+    }
+
+    @Override
+    public List<Product> findAll() {
+        return StreamSupport.stream(productRepository.findAll().spliterator(), false)
+                .collect(Collectors.toList());
     }
 
     @Override

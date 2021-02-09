@@ -12,6 +12,10 @@ import com.hybris.shop.service.ServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 @Service
 public class OrderItemService implements ServiceInterface<OrderItem, OrderItemId> {
 
@@ -51,12 +55,23 @@ public class OrderItemService implements ServiceInterface<OrderItem, OrderItemId
     }
 
     @Override
+    public boolean existsById(OrderItemId id) {
+        return orderItemRepository.existsById(id);
+    }
+
+    @Override
     public void deleteById(OrderItemId id) {
         if (orderItemRepository.existsById(id)) {
             orderItemRepository.deleteById(id);
         } else {
             throw new OrderItemNotFoundByIdException(id);
         }
+    }
+
+    @Override
+    public List<OrderItem> findAll() {
+        return StreamSupport.stream(orderItemRepository.findAll().spliterator(), false)
+                .collect(Collectors.toList());
     }
 
 }

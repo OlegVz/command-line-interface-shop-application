@@ -3,11 +3,14 @@ package com.hybris.shop.service;
 import org.springframework.util.ReflectionUtils;
 
 import java.util.Arrays;
+import java.util.List;
 
 public interface ServiceInterface<T, U> {
     T save(T object);
 
     T findById(U id);
+
+    boolean existsById(U id);
 
     default T update(U id, T newDataObject) {
         T objectToUpdate = findById(id);
@@ -33,4 +36,6 @@ public interface ServiceInterface<T, U> {
     }
 
     void deleteById(U id);
+
+    List<T> findAll();
 }

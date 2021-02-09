@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -68,7 +69,7 @@ class UserServiceTest {
         //when
         when(userRepository.existsByEmail(anyString())).thenReturn(true);
 
-        boolean existByEmail = userService.existByEmail(TEST_EMAIL);
+        boolean existByEmail = userService.existsByEmail(TEST_EMAIL);
 
         //then
         assertTrue(existByEmail);
@@ -80,7 +81,7 @@ class UserServiceTest {
         //when
         when(userRepository.existsByEmail(anyString())).thenReturn(false);
 
-        boolean existByEmail = userService.existByEmail(TEST_EMAIL);
+        boolean existByEmail = userService.existsByEmail(TEST_EMAIL);
 
         //then
         assertFalse(existByEmail);
@@ -175,6 +176,30 @@ class UserServiceTest {
     }
 
     @Test
+    void shouldReturnTrueWhenExistById() {
+        //given
+        //when
+        when(userRepository.existsById(anyLong())).thenReturn(true);
+
+        boolean b = userService.existsById(USER_ID);
+
+        //then
+        assertTrue(b);
+    }
+
+    @Test
+    void shouldReturnFalseWhenExistById() {
+        //given
+        //when
+        when(userRepository.existsById(anyLong())).thenReturn(false);
+
+        boolean b = userService.existsById(NOT_EXIST_ID);
+
+        //then
+        assertFalse(b);
+    }
+
+    @Test
     void shouldDeleteUserById() {
         //given
         //when
@@ -197,5 +222,23 @@ class UserServiceTest {
         UserNotFoundByIdException exception =
                 assertThrows(UserNotFoundByIdException.class, () -> userService.deleteById(NOT_EXIST_ID));
         assertEquals(String.format("User with id %s was not found", NOT_EXIST_ID), exception.getMessage());
+    }
+
+    @Test
+    void shouldFindAndReturnAllUsersInDb() {
+        //given
+        List<User> usersInDB = List.of(userInDB);
+        Iterable<User> userIterable = usersInDB;
+
+        //when
+        when(userRepository.findAll()).thenReturn(userIterable);
+
+        List<User> users = userService.findAll();
+
+        //then
+        assertEquals(usersInDB.size(), users.size());
+        for (int i = 0; i < users.size(); i++) {
+            assertEquals(usersInDB.get(i), users.get(i));
+        }
     }
 }

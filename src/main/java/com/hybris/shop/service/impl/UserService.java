@@ -8,6 +8,10 @@ import com.hybris.shop.service.UserServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 @Service
 public class UserService implements UserServiceInterface {
 
@@ -19,12 +23,12 @@ public class UserService implements UserServiceInterface {
     }
 
     @Override
-    public boolean existByEmail(String email) {
+    public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
     }
 
     @Override
-    public User save(User user) {
+    public User save(User user) throws UserWithSuchEmailExistException {
         String email = user.getEmail();
         if (userRepository.existsByEmail(email)) {
             throw new UserWithSuchEmailExistException(email);
@@ -34,16 +38,27 @@ public class UserService implements UserServiceInterface {
     }
 
     @Override
-    public User findById(Long id) {
+    public User findById(Long id) throws UserNotFoundByIdException{
         return userRepository.findById(id).orElseThrow(() -> new UserNotFoundByIdException(id));
     }
 
     @Override
-    public void deleteById(Long id) {
+    public boolean existsById(Long id) {
+        return userRepository.existsById(id);
+    }
+
+    @Override
+    public void deleteById(Long id) throws UserNotFoundByIdException{
         if (userRepository.existsById(id)) {
             userRepository.deleteById(id);
         } else {
             throw new UserNotFoundByIdException(id);
         }
+    }
+
+    @Override
+    public List<User> findAll() {
+        return StreamSupport.stream(userRepository.findAll().spliterator(), false)
+                .collect(Collectors.toList());
     }
 }
