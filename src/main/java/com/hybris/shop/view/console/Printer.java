@@ -22,6 +22,11 @@ public class Printer<T> {
     }
 
     public void printTable(List<T> entity) {
+        if (entity.size() == 0) {
+            printLine("No data! Can't print table!\n");
+            return;
+        }
+
         List<String> columnNames = getColumnNames(entity);
         List<String> data = getColumnsData(entity);
         this.data = new ArrayList<>(data);
@@ -123,10 +128,16 @@ public class Printer<T> {
     }
 
     private void printBody(List<String> data) {
-        for (int i = 0; i < data.size(); i++) {
-            printLine(String.format("|%-" + columnWidths[i] + "s", data.get(i)));
-        }
+        int columnCounter = 0;
 
-        printLine(ROW_END);
+        for (String datum : data) {
+            printLine(String.format("|%-" + columnWidths[columnCounter] + "s", datum));
+            if (columnCounter == columnWidths.length - 1) {
+                printLine(ROW_END);
+                columnCounter = -1;
+            }
+
+            columnCounter++;
+        }
     }
 }

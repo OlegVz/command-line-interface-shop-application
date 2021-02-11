@@ -3,7 +3,9 @@ package com.hybris.shop.view.menu.commands;
 public enum Commands {
     EXIT("exit"),
     BACK("back"),
-    SUCCESS("success");
+    SUCCESS("success"),
+    YES("y"),
+    NO("n");
 
     private String command;
 

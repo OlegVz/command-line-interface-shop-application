@@ -1,13 +1,15 @@
 package com.hybris.shop.facade.impl;
 
 import com.hybris.shop.dto.NewUserDto;
-import com.hybris.shop.dto.OrderDto;
 import com.hybris.shop.dto.UserDto;
+import com.hybris.shop.dto.UserOrdersDto;
+import com.hybris.shop.exceptions.userExceptions.InvalidLoginOrPasswordException;
 import com.hybris.shop.exceptions.userExceptions.UserNotFoundByIdException;
 import com.hybris.shop.exceptions.userExceptions.UserWithSuchEmailExistException;
 import com.hybris.shop.facade.UserFacadeInterface;
 import com.hybris.shop.mapper.OrderMapper;
 import com.hybris.shop.mapper.UserMapper;
+import com.hybris.shop.model.Order;
 import com.hybris.shop.model.User;
 import com.hybris.shop.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,9 +85,38 @@ public class UserFacade implements UserFacadeInterface {
     }
 
     @Override
-    public List<OrderDto> findAllUserOrders(Long userId) {
-        return userService.findById(userId).getOrders().stream()
-                .map(orderMapper::toOrderDtoFromEntity)
+    public List<UserOrdersDto> findAllUserOrders(Long userId) {
+        List<Order> orders = userService.findById(userId).getOrders();
+
+        return orders.stream()
+                .distinct()
+                .map(orderMapper::toUserOrdersDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Long logIn(NewUserDto newUserDto) throws InvalidLoginOrPasswordException{
+        String email = newUserDto.getEmail();
+
+        User userByEmail;
+
+        if (userService.existsByEmail(email)){
+            userByEmail = userService.findByEmail(email);
+
+            if (!userByEmail.getEmail().equals(newUserDto.getEmail())) {
+                throw new InvalidLoginOrPasswordException();
+            }
+        } else {
+            throw new InvalidLoginOrPasswordException();
+        }
+
+        return userByEmail.getId();
+    }
+
+    @Override
+    public boolean chekPassword(Long currentUserId, String password) {
+        User userById = userService.findById(currentUserId);
+
+        return password.equals(userById.getPassword());
     }
 }

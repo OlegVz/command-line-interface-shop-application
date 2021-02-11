@@ -28,6 +28,11 @@ public class UserService implements UserServiceInterface {
     }
 
     @Override
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    @Override
     public User save(User user) throws UserWithSuchEmailExistException {
         String email = user.getEmail();
         if (userRepository.existsByEmail(email)) {

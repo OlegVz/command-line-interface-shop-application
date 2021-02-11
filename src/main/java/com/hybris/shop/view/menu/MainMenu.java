@@ -2,25 +2,22 @@ package com.hybris.shop.view.menu;
 
 import com.hybris.shop.view.console.Input;
 import com.hybris.shop.view.console.Printer;
-import com.hybris.shop.view.menu.commands.Commands;
 import com.hybris.shop.view.menu.userMenu.UserMenu;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static com.hybris.shop.view.console.Input.command;
+import static com.hybris.shop.view.menu.commands.CommandsValidator.isExitCommand;
+import static com.hybris.shop.view.menu.commands.CommandsValidator.isSuccessCommand;
 
 @Component
 public class MainMenu {
 
-    private static final String EXIT_COMMAND = Commands.EXIT.getCommand();
-    public static final String BACK_COMMAND = Commands.BACK.getCommand();
-    private static final String SUCCESS_COMMAND = Commands.SUCCESS.getCommand();
+    private final Input input;
 
-    private Input input;
+    private final Printer<String> printer;
 
-    private Printer<String> printer;
-
-    private UserMenu userMenu;
+    private final UserMenu userMenu;
 
     @Autowired
     public MainMenu(Input input,
@@ -36,32 +33,33 @@ public class MainMenu {
             printHelloMenu();
 
             command = input.getCommand();
-            if (EXIT_COMMAND.equals(command)) {
+            if (isExitCommand(command)) {
                 return;
             }
 
             switch (command) {
                 case "1":
                     userMenu.userRegistration();
-                    if (EXIT_COMMAND.equals(command)) {
+                    if (isExitCommand(command)) {
                         return;
                     }
                     break;
                 case "2":
-                    // TODO: 10.02.21 user login
-                    System.out.println("function in progress!");
-                    command = BACK_COMMAND;
+                    userMenu.userLogin();
+                    if (isExitCommand(command)) {
+                        return;
+                    }
                     break;
                 default:
                     printer.printLine("Invalid command: " + command + "\n");
             }
-        } while (!SUCCESS_COMMAND.equals(command));
+        } while (!isSuccessCommand(command));
 
         do {
             printMainMenu();
 
             command = input.getCommand();
-            if (EXIT_COMMAND.equals(command)) {
+            if (isExitCommand(command)) {
                 return;
             }
 
@@ -77,7 +75,7 @@ public class MainMenu {
             }
 
 
-        } while (!EXIT_COMMAND.equals(command));
+        } while (!isExitCommand(command));
 
         printer.printLine("Goodbye!");
     }

@@ -2,14 +2,18 @@ package com.hybris.shop.mapper;
 
 import com.hybris.shop.dto.NewOrderDto;
 import com.hybris.shop.dto.OrderDto;
+import com.hybris.shop.dto.UserOrdersDto;
 import com.hybris.shop.model.Order;
+import com.hybris.shop.model.OrderItem;
 import com.hybris.shop.model.User;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Component
 public class OrderMapper {
@@ -36,6 +40,26 @@ public class OrderMapper {
                     return context.getDestination();
                 }
         );
+
+        modelMapper.createTypeMap(Order.class, UserOrdersDto.class).setPostConverter(
+                context -> {
+                    Order source = context.getSource();
+                    UserOrdersDto destination = context.getDestination();
+
+                    List<String> productsNames = source.getOrderItems().stream()
+                            .map(orderItem -> orderItem.getProduct().getName())
+                            .collect(Collectors.toList());
+
+                    List<Integer> quantityList = source.getOrderItems().stream()
+                            .map(OrderItem::getQuantity)
+                            .collect(Collectors.toList());
+
+                    destination.setProductNames(productsNames);
+                    destination.setQuantity(quantityList);
+
+                    return context.getDestination();
+                }
+        );
     }
 
     public OrderDto toOrderDtoFromEntity(Order order) {
@@ -44,5 +68,9 @@ public class OrderMapper {
 
     public Order toEntityFromNewOrderDto(NewOrderDto newOrderDto) {
         return Objects.isNull(newOrderDto) ? null : modelMapper.map(newOrderDto, Order.class);
+    }
+
+    public UserOrdersDto toUserOrdersDto(Order order) {
+        return Objects.isNull(order) ? null : modelMapper.map(order, UserOrdersDto.class);
     }
 }
