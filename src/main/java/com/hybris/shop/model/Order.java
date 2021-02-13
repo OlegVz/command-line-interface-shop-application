@@ -29,7 +29,9 @@ public class Order {
     @Column(name = "created_at")
     private String createdAt;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "order",
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.ALL)
     List<OrderItem> orderItems;
 
     public enum OrderStatus{

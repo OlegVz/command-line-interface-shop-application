@@ -1,6 +1,7 @@
 package com.hybris.shop.view.menu.orderMenu;
 
 import com.hybris.shop.dto.*;
+import com.hybris.shop.exceptions.orderExceptions.OrderNotFoundByIdException;
 import com.hybris.shop.exceptions.productExceptions.ProductNotFoundByIdException;
 import com.hybris.shop.exceptions.productExceptions.ProductOutOfStockException;
 import com.hybris.shop.facade.impl.OrderFacade;
@@ -8,9 +9,11 @@ import com.hybris.shop.facade.impl.OrderItemFacade;
 import com.hybris.shop.facade.impl.ProductFacade;
 import com.hybris.shop.facade.impl.UserFacade;
 import com.hybris.shop.mapper.OrderMapper;
+import com.hybris.shop.model.Order;
 import com.hybris.shop.model.Product;
 import com.hybris.shop.view.console.Input;
 import com.hybris.shop.view.console.Printer;
+import com.hybris.shop.view.menu.userMenu.UserMenu;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,28 +31,28 @@ import static com.hybris.shop.view.menu.userMenu.UserMenu.currentUserId;
 public class OrderMenu {
 
     private OrderFacade orderFacade;
-    private OrderMapper orderMapper;
     private final Printer printer;
     private final Input input;
     private final ProductFacade productFacade;
     private final OrderItemFacade orderItemFacade;
     private final UserFacade userFacade;
+    private final UserMenu userMenu;
 
     @Autowired
     public OrderMenu(OrderFacade orderFacade,
-                     OrderMapper orderMapper,
                      Printer printer,
                      Input input,
                      ProductFacade productFacade,
                      OrderItemFacade orderItemFacade,
-                     UserFacade userFacade) {
+                     UserFacade userFacade,
+                     UserMenu userMenu) {
         this.orderFacade = orderFacade;
-        this.orderMapper = orderMapper;
         this.printer = printer;
         this.input = input;
         this.productFacade = productFacade;
         this.orderItemFacade = orderItemFacade;
         this.userFacade = userFacade;
+        this.userMenu = userMenu;
     }
 
     public void menu() {
@@ -66,11 +69,10 @@ public class OrderMenu {
                     doOrder();
                     break;
                 case "2":
-                    System.out.println("Function in progress");
+                    updateOrderStatus();
                     break;
                 case "3":
-                    if (confirmCommand("Confirm delete order?")) {
-                    }
+                    deleteOrder();
                     break;
                 default:
                     printer.printLine("Invalid command: " + command + "\n");
@@ -82,6 +84,94 @@ public class OrderMenu {
         } while (true);
     }
 
+    private void updateOrderStatus() {
+        printer.printLine("Update order status menu\n");
+        NewOrderDto newOrderDto = new NewOrderDto();
+        userMenu.listUserOrders();
+
+        Long orderId = setOrderId();
+        if (isExitCommand(command) || isBAckCommand(command)) {
+            return;
+        }
+        do {
+            printer.printLine(" - to change order status on 'Confirmed order' press '1'\n");
+            printer.printLine(" - to change order status on 'Ful filled order' press '2'\n");
+
+            command = input.getCommand();
+            if (isExitCommand(command) || isBAckCommand(command)) {
+                return;
+            }
+
+            switch (command) {
+                case "1":
+                    newOrderDto.setStatus(Order.OrderStatus.CONFIRMED_ORDER.getStatus());
+                    break;
+                case "2":
+                    newOrderDto.setStatus(Order.OrderStatus.FULFILLED_ORDER.getStatus());
+                    break;
+                default:
+                    printer.printLine("Invalid command: " + command + "\n");
+            }
+        } while (Objects.isNull(newOrderDto.getStatus()));
+
+
+        if (confirmCommand("Save changes?")) {
+            OrderDto updateOrder = orderFacade.update(orderId, newOrderDto);
+            printer.printTable(List.of(updateOrder));
+        }
+
+    }
+
+    private void deleteOrder() {
+        userMenu.listUserOrders();
+
+        Long orderId = setOrderId();
+
+        if (isExitCommand(command) || isBAckCommand(command)) {
+            return;
+        }
+
+        OrderDto orderById = orderFacade.findById(orderId);
+
+        printer.printLine("Order to remove:\n");
+        printer.printTable(List.of(orderById));
+
+        if (confirmCommand("Remove order?")) {
+            orderFacade.deleteById(orderId);
+            printer.printLine("Order removed\n");
+        }
+    }
+
+    private Long setOrderId() {
+        Long orderId = null;
+        boolean isOrderExist = false;
+
+        do {
+            try {
+                printer.printLine("Select order id\n");
+                command = input.getCommand();
+                if (isExitCommand(command) || isBAckCommand(command)) {
+                    break;
+                }
+
+                orderId = Long.parseLong(command);
+
+                isOrderExist = orderFacade.existsById(orderId);
+
+                if (!isOrderExist) {
+                    throw new OrderNotFoundByIdException(orderId);
+                }
+            } catch (NumberFormatException ex) {
+                printer.printLine(String.format("Invalid input '%s'. Please input only numbers!\n", command));
+            } catch (OrderNotFoundByIdException ex) {
+                printer.printLine(String.format("Order with id '%s' not fount. Please input id from product table!\n",
+                        command));
+            }
+        } while (!isOrderExist);
+
+        return orderId;
+    }
+
     private void doOrder() {
         NewOrderDto newOrderDto = new NewOrderDto();
         NewOrderItemDto newOrderItemDto = new NewOrderItemDto();
@@ -89,7 +179,7 @@ public class OrderMenu {
         Map<Long, Integer> productToOrder = new HashMap<>();
         Long orderId;
 
-       do {
+        do {
             Long productId;
             Integer productQuantity;
 
@@ -116,24 +206,24 @@ public class OrderMenu {
 
         } while (confirmCommand("Do you want add new product to the order?"));
 
-       if (confirmCommand("Do you confirm order?")) {
-           newOrderDto.setUserId(currentUserId);
-           orderDto = orderFacade.save(newOrderDto);
-           orderId = orderDto.getId();
+        if (confirmCommand("Do you confirm order?")) {
+            newOrderDto.setUserId(currentUserId);
+            orderDto = orderFacade.save(newOrderDto);
+            orderId = orderDto.getId();
 
-           productToOrder.forEach((productId, quantity) -> {
-               newOrderItemDto.setOrderId(orderId);
-               newOrderItemDto.setProductId(productId);
-               newOrderItemDto.setQuantity(quantity);
-               orderItemFacade.save(newOrderItemDto);
-           });
+            productToOrder.forEach((productId, quantity) -> {
+                newOrderItemDto.setOrderId(orderId);
+                newOrderItemDto.setProductId(productId);
+                newOrderItemDto.setQuantity(quantity);
+                orderItemFacade.save(newOrderItemDto);
+            });
 
-           List<UserOrdersDto> userOrderDtos = userFacade.findAllUserOrders(currentUserId).stream()
-                   .filter(userOrdersDto -> userOrdersDto.getId().equals(orderId))
-                   .collect(Collectors.toList());
+            List<UserOrdersDto> userOrderDtos = userFacade.findAllUserOrders(currentUserId).stream()
+                    .filter(userOrdersDto -> userOrdersDto.getId().equals(orderId))
+                    .collect(Collectors.toList());
 
-           printer.printTable(userOrderDtos);
-       }
+            printer.printTable(userOrderDtos);
+        }
     }
 
     private Integer setProductQuantity() {

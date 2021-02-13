@@ -5,6 +5,7 @@ import com.hybris.shop.dto.OrderDto;
 import com.hybris.shop.facade.OrderFacadeInterface;
 import com.hybris.shop.mapper.OrderMapper;
 import com.hybris.shop.model.Order;
+import com.hybris.shop.model.User;
 import com.hybris.shop.service.impl.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -30,7 +31,6 @@ public class OrderFacade implements OrderFacadeInterface {
     @Override
     public OrderDto save(NewOrderDto newOrderDto) {
         newOrderDto.setStatus(Order.OrderStatus.NEW_ORDER.getStatus());
-//        newOrderDto.setCreatedAt(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
         String format = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         newOrderDto.setCreatedAt(format);
 
@@ -49,6 +49,8 @@ public class OrderFacade implements OrderFacadeInterface {
     @Override
     public OrderDto update(Long id, NewOrderDto newOrderDto) {
         Order newDataObject = orderMapper.toEntityFromNewOrderDto(newOrderDto);
+        User user = orderService.findById(id).getUser();
+        newDataObject.setUser(user);
 
         return orderMapper.toOrderDtoFromEntity(orderService.update(id, newDataObject));
     }

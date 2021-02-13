@@ -261,13 +261,13 @@ public class UserMenu {
         command = SUCCESS_COMMAND;
     }
 
-    private void listUserOrders() {
+    public void listUserOrders() {
         List<UserOrdersDto> allUserOrders = userFacade.findAllUserOrders(currentUserId).stream()
                 .sorted(Comparator.comparingLong(UserOrdersDto::getId))
                 .collect(Collectors.toList());
 
         if (allUserOrders.size() != 0) {
-            printer.printLine("Orders history\n");
+            printer.printLine("Orders list\n");
             printer.printTable(allUserOrders);
         } else {
             printer.printLine("Order list is empty!\n");
