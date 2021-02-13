@@ -10,15 +10,20 @@ public class UserOrdersDto {
     @ColumnNameAlias(alias = "Order ID")
     private Long id;
 
-    @ColumnNameAlias(alias = "Status")
-    private String status;
+    @ColumnNameAlias(alias = "Products total price")
+    List<Integer> productTotalPrice;
 
-    @ColumnNameAlias(alias = "Date")
-    private String createdAt;
-
-    @ColumnNameAlias(alias = "Products")
+    @ColumnNameAlias(alias = "Product name")
     List<String> productNames;
 
-    @ColumnNameAlias(alias = "Quantity")
+    @ColumnNameAlias(alias = "Product quantity")
     List<Integer> quantity;
+
+    private String status;
+
+    @ColumnNameAlias(alias = "Order created date")
+    private String createdAt;
+
+
+
 }

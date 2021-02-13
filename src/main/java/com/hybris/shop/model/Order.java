@@ -31,4 +31,19 @@ public class Order {
 
     @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
     List<OrderItem> orderItems;
+
+    public enum OrderStatus{
+        NEW_ORDER("New order"),
+        CONFIRMED_ORDER("Confirmed order"),
+        FULFILLED_ORDER("Ful filled order");
+
+        String status;
+        OrderStatus(String status) {
+            this.status = status;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+    }
 }

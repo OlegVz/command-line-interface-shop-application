@@ -29,7 +29,11 @@ public class OrderFacade implements OrderFacadeInterface {
 
     @Override
     public OrderDto save(NewOrderDto newOrderDto) {
-        newOrderDto.setCreatedAt(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
+        newOrderDto.setStatus(Order.OrderStatus.NEW_ORDER.getStatus());
+//        newOrderDto.setCreatedAt(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
+        String format = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        newOrderDto.setCreatedAt(format);
+
         Order savedOrderItem = orderService.save(orderMapper.toEntityFromNewOrderDto(newOrderDto));
 
         return orderMapper.toOrderDtoFromEntity(savedOrderItem);

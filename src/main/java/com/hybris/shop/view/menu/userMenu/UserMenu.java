@@ -15,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.hybris.shop.view.console.Input.command;
 import static com.hybris.shop.view.menu.commands.CommandsValidator.*;
@@ -170,7 +172,15 @@ public class UserMenu {
 
         validateAndSetEmail("Input user email", newUserDto);
 
+        if (isExitCommand(command) || isBAckCommand(command)) {
+            return;
+        }
+
         validateAndSetPassword("Input password", newUserDto);
+
+        if (isExitCommand(command) || isBAckCommand(command)) {
+            return;
+        }
 
         UserDto savedUser = userFacade.save(newUserDto);
 
@@ -252,7 +262,9 @@ public class UserMenu {
     }
 
     private void listUserOrders() {
-        List<UserOrdersDto> allUserOrders = userFacade.findAllUserOrders(currentUserId);
+        List<UserOrdersDto> allUserOrders = userFacade.findAllUserOrders(currentUserId).stream()
+                .sorted(Comparator.comparingLong(UserOrdersDto::getId))
+                .collect(Collectors.toList());
 
         if (allUserOrders.size() != 0) {
             printer.printLine("Orders history\n");

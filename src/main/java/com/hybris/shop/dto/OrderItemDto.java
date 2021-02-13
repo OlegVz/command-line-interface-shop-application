@@ -1,5 +1,6 @@
 package com.hybris.shop.dto;
 
+import com.hybris.shop.annotations.ColumnNameAlias;
 import com.hybris.shop.model.Order;
 import com.hybris.shop.model.Product;
 import lombok.Data;
@@ -7,9 +8,12 @@ import lombok.Data;
 @Data
 public class OrderItemDto {
 
-    private Order order;
+    @ColumnNameAlias(alias = "Order")
+    private OrderDto order;
 
-    private Product product;
+    @ColumnNameAlias(alias = "Product")
+    private ProductDto product;
 
+    @ColumnNameAlias(alias = "Quantity")
     private Integer quantity;
 }
