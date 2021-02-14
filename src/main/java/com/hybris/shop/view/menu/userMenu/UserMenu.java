@@ -71,14 +71,10 @@ public class UserMenu {
                     updateUserData();
                     break;
                 case "3":
-                    if (confirmCommand("Log out?")) {
-                        logOut();
-                    }
+                    logOut();
                     break;
                 case "4":
-                    if (confirmCommand("Confirm delete user?")) {
-                        deleteCurrentUser();
-                    }
+                    deleteCurrentUser();
                     break;
                 default:
                     printer.printLine("Invalid command: " + command + "\n");
@@ -161,11 +157,20 @@ public class UserMenu {
     }
 
     private void deleteCurrentUser() {
-        userFacade.deleteById(currentUserId);
-        logOut();
+        if (confirmCommand("Confirm delete user?")) {
+            userFacade.deleteById(currentUserId);
+
+            returnToMainMenu();
+        }
     }
 
     private void logOut() {
+        if (confirmCommand("Log out?")) {
+            returnToMainMenu();
+        }
+    }
+
+    private void returnToMainMenu() {
         currentUserId = null;
         mainMenu.menu();
     }

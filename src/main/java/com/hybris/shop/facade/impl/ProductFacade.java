@@ -67,4 +67,9 @@ public class ProductFacade implements ProductFacadeInterface {
                 .map(productMapper::fromEntityToProductDto)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public boolean existsByName(String name) {
+        return productService.existsByName(name);
+    }
 }

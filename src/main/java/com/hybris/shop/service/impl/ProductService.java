@@ -68,4 +68,9 @@ public class ProductService implements ProductServiceInterface {
     public List<Product> sortProductsByNumberOfOrdersDesc() {
         return productRepository.sortProductsByNumberOfOrdersDesc();
     }
+
+    @Override
+    public boolean existsByName(String name) {
+        return productRepository.existsByName(name);
+    }
 }
