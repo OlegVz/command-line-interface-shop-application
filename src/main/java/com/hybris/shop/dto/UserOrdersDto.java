@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class UserOrdersDto {
+public class  UserOrdersDto {
     @ColumnNameAlias(alias = "Order ID")
     private Long id;
 
@@ -23,7 +23,4 @@ public class UserOrdersDto {
 
     @ColumnNameAlias(alias = "Order created date")
     private String createdAt;
-
-
-
 }

@@ -10,4 +10,6 @@ public interface ProductServiceInterface extends ServiceInterface<Product, Long>
     List<Product> sortProductsByNumberOfOrdersDesc();
 
     boolean existsByName(String name);
+
+    void deleteAll();
 }

@@ -1,11 +1,11 @@
 package com.hybris.shop.view.menu.commands;
 
-import com.hybris.shop.view.console.Input;
-import com.hybris.shop.view.console.Printer;
+import com.hybris.shop.view.consoleInputOutput.Input;
+import com.hybris.shop.view.consoleInputOutput.Printer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static com.hybris.shop.view.console.Input.command;
+import static com.hybris.shop.view.consoleInputOutput.Input.command;
 
 @Component
 public class CommandsValidator {

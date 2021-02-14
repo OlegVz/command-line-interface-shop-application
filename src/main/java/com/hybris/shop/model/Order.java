@@ -30,16 +30,16 @@ public class Order {
     private String createdAt;
 
     @OneToMany(mappedBy = "order",
-            fetch = FetchType.EAGER,
             cascade = CascadeType.ALL)
     List<OrderItem> orderItems;
 
-    public enum OrderStatus{
+    public enum OrderStatus {
         NEW_ORDER("New order"),
         CONFIRMED_ORDER("Confirmed order"),
         FULFILLED_ORDER("Ful filled order");
 
         String status;
+
         OrderStatus(String status) {
             this.status = status;
         }

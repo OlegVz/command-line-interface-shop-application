@@ -21,7 +21,8 @@ public class ProductFacade implements ProductFacadeInterface {
     private final ProductMapper productMapper;
 
     @Autowired
-    public ProductFacade(ProductService productService, ProductMapper productMapper) {
+    public ProductFacade(ProductService productService,
+                         ProductMapper productMapper) {
         this.productService = productService;
         this.productMapper = productMapper;
     }
@@ -71,5 +72,19 @@ public class ProductFacade implements ProductFacadeInterface {
     @Override
     public boolean existsByName(String name) {
         return productService.existsByName(name);
+    }
+
+    @Override
+    public List<ProductDto> sortProductsByNumberOfOrdersDesc() {
+        List<Product> products = productService.sortProductsByNumberOfOrdersDesc();
+
+        return products.stream()
+                .map(productMapper::fromEntityToProductDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteAll() {
+        productService.deleteAll();
     }
 }

@@ -106,6 +106,10 @@ public class UserFacade implements UserFacadeInterface {
             if (!userByEmail.getEmail().equals(newUserDto.getEmail())) {
                 throw new InvalidLoginOrPasswordException();
             }
+
+            if (!userByEmail.getPassword().equals(newUserDto.getPassword())) {
+                throw new InvalidLoginOrPasswordException();
+            }
         } else {
             throw new InvalidLoginOrPasswordException();
         }
