@@ -27,12 +27,15 @@ public class UserMenu {
 
     private static final String SUCCESS_COMMAND = Commands.SUCCESS.getCommand();
 
-    private final UserFacade userFacade;
     private final Printer printer;
     private final Input input;
+
     private final PasswordValidatorUtil passwordValidatorUtil;
-    private final MainMenu mainMenu;
     private final EmailValidatorUtil emailValidatorUtil;
+
+    private final UserFacade userFacade;
+
+    private final MainMenu mainMenu;
 
     public static Long currentUserId;
 
@@ -109,13 +112,13 @@ public class UserMenu {
                 case "2":
                     do {
                         printer.printLine("Input password");
+
                         command = input.getCommand();
                         if (isExitCommand(command) || isBAckCommand(command)) {
                             return;
                         }
 
                         boolean passwordCorrect = isPasswordCorrect(command);
-
                         if (!passwordCorrect) {
                             printer.printLine("Invalid password! Please try again\n");
                         } else {
@@ -128,12 +131,12 @@ public class UserMenu {
                     if (isExitCommand(command) || isBAckCommand(command)) {
                         return;
                     }
-
                     break;
                 case "3":
                     if (confirmCommand("Save changes?")) {
                         UserDto update = userFacade.update(currentUserId, newUserDto);
                         printer.printTable(List.of(update));
+
                         return;
                     }
                     break;
@@ -171,19 +174,16 @@ public class UserMenu {
         NewUserDto newUserDto = new NewUserDto();
 
         validateAndSetEmail("Input user email", newUserDto);
-
         if (isExitCommand(command) || isBAckCommand(command)) {
             return;
         }
 
         validateAndSetPassword("Input password", newUserDto);
-
         if (isExitCommand(command) || isBAckCommand(command)) {
             return;
         }
 
         UserDto savedUser = userFacade.save(newUserDto);
-
         currentUserId = savedUser.getId();
 
         printer.printLine("Saved user:\n");
@@ -238,6 +238,7 @@ public class UserMenu {
             if (isExitCommand(command) || isBAckCommand(command)) {
                 return;
             }
+
             newUserDto.setEmail(command);
 
             printer.printLine("Input password");
@@ -248,7 +249,6 @@ public class UserMenu {
             }
 
             newUserDto.setPassword(command);
-
 
             try {
                 currentUserId = userFacade.logIn(newUserDto);

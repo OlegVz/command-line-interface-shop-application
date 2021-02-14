@@ -15,7 +15,6 @@ import static com.hybris.shop.view.menu.commands.CommandsValidator.isSuccessComm
 public class MainMenu {
 
     private final Input input;
-
     private final Printer<String> printer;
 
     private final UserMenu userMenu;
@@ -77,8 +76,6 @@ public class MainMenu {
                 default:
                     printer.printLine("Invalid command: " + command + "\n");
             }
-
-
         } while (!isExitCommand(command));
 
         printer.printLine("Goodbye!\n");

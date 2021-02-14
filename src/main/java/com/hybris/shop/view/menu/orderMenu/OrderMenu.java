@@ -8,7 +8,6 @@ import com.hybris.shop.facade.impl.OrderFacade;
 import com.hybris.shop.facade.impl.OrderItemFacade;
 import com.hybris.shop.facade.impl.ProductFacade;
 import com.hybris.shop.facade.impl.UserFacade;
-import com.hybris.shop.mapper.OrderMapper;
 import com.hybris.shop.model.Order;
 import com.hybris.shop.model.Product;
 import com.hybris.shop.view.console.Input;
@@ -30,12 +29,14 @@ import static com.hybris.shop.view.menu.userMenu.UserMenu.currentUserId;
 @Component
 public class OrderMenu {
 
-    private OrderFacade orderFacade;
     private final Printer printer;
     private final Input input;
+
+    private final OrderFacade orderFacade;
     private final ProductFacade productFacade;
     private final OrderItemFacade orderItemFacade;
     private final UserFacade userFacade;
+
     private final UserMenu userMenu;
 
     @Autowired
@@ -74,6 +75,9 @@ public class OrderMenu {
                 case "3":
                     deleteOrder();
                     break;
+                case "4":
+                    listAllOrders();
+                    break;
                 default:
                     printer.printLine("Invalid command: " + command + "\n");
             }
@@ -82,6 +86,12 @@ public class OrderMenu {
                 return;
             }
         } while (true);
+    }
+
+    private void listAllOrders() {
+        printer.printLine("All orders list:\n");
+
+        printer.printTable(orderFacade.findAllOrdersWitProducts());
     }
 
     private void updateOrderStatus() {
@@ -94,8 +104,7 @@ public class OrderMenu {
             return;
         }
         do {
-            printer.printLine(" - to change order status on 'Confirmed order' press '1'\n");
-            printer.printLine(" - to change order status on 'Ful filled order' press '2'\n");
+            printUpdateOrderMenu();
 
             command = input.getCommand();
             if (isExitCommand(command) || isBAckCommand(command)) {
@@ -114,12 +123,10 @@ public class OrderMenu {
             }
         } while (Objects.isNull(newOrderDto.getStatus()));
 
-
         if (confirmCommand("Save changes?")) {
             OrderDto updateOrder = orderFacade.update(orderId, newOrderDto);
             printer.printTable(List.of(updateOrder));
         }
-
     }
 
     private void deleteOrder() {
@@ -157,7 +164,6 @@ public class OrderMenu {
                 orderId = Long.parseLong(command);
 
                 isOrderExist = orderFacade.existsById(orderId);
-
                 if (!isOrderExist) {
                     throw new OrderNotFoundByIdException(orderId);
                 }
@@ -173,10 +179,10 @@ public class OrderMenu {
     }
 
     private void doOrder() {
+        Map<Long, Integer> productToOrder = new HashMap<>();
         NewOrderDto newOrderDto = new NewOrderDto();
         NewOrderItemDto newOrderItemDto = new NewOrderItemDto();
         OrderDto orderDto;
-        Map<Long, Integer> productToOrder = new HashMap<>();
         Long orderId;
 
         do {
@@ -203,7 +209,6 @@ public class OrderMenu {
             }
 
             productToOrder.put(productId, productQuantity);
-
         } while (confirmCommand("Do you want add new product to the order?"));
 
         if (confirmCommand("Do you confirm order?")) {
@@ -228,7 +233,6 @@ public class OrderMenu {
 
     private Integer setProductQuantity() {
         Integer productQuantity = null;
-        boolean b = false;
 
         do {
             try {
@@ -249,7 +253,6 @@ public class OrderMenu {
                 printer.printLine("Quantity mast be bigger then 0!\n");
                 productQuantity = null;
             }
-
         } while (Objects.isNull(productQuantity));
 
         return productQuantity;
@@ -295,6 +298,14 @@ public class OrderMenu {
         printer.printLine("\t- to do new order press '1';\n");
         printer.printLine("\t- to update order status press '2';\n");
         printer.printLine("\t- to delete order press '3';\n");
+        printer.printLine("\t- to list all orders press '4';\n");
+        printer.printLine("Back to previous menu input 'back'\n");
+        printer.printLine("Exit from program input 'exit'\n");
+    }
+
+    private void printUpdateOrderMenu() {
+        printer.printLine(" - to change order status on 'Confirmed order' press '1'\n");
+        printer.printLine(" - to change order status on 'Ful filled order' press '2'\n");
         printer.printLine("Back to previous menu input 'back'\n");
         printer.printLine("Exit from program input 'exit'\n");
     }

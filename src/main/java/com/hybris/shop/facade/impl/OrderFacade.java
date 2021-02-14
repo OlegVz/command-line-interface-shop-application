@@ -2,6 +2,7 @@ package com.hybris.shop.facade.impl;
 
 import com.hybris.shop.dto.NewOrderDto;
 import com.hybris.shop.dto.OrderDto;
+import com.hybris.shop.dto.UserOrdersDto;
 import com.hybris.shop.facade.OrderFacadeInterface;
 import com.hybris.shop.mapper.OrderMapper;
 import com.hybris.shop.model.Order;
@@ -69,6 +70,17 @@ public class OrderFacade implements OrderFacadeInterface {
     public List<OrderDto> findAll() {
         return orderService.findAll().stream()
                 .map(orderMapper::toOrderDtoFromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<UserOrdersDto> findAllOrdersWitProducts() {
+
+        List<Order> orders = orderService.findAll();
+
+        return orders.stream()
+                .distinct()
+                .map(orderMapper::toUserOrdersDto)
                 .collect(Collectors.toList());
     }
 }
