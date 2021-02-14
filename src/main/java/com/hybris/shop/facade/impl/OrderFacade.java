@@ -2,9 +2,11 @@ package com.hybris.shop.facade.impl;
 
 import com.hybris.shop.dto.NewOrderDto;
 import com.hybris.shop.dto.OrderDto;
+import com.hybris.shop.dto.UserOrdersDto;
 import com.hybris.shop.facade.OrderFacadeInterface;
 import com.hybris.shop.mapper.OrderMapper;
 import com.hybris.shop.model.Order;
+import com.hybris.shop.model.User;
 import com.hybris.shop.service.impl.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,7 +31,10 @@ public class OrderFacade implements OrderFacadeInterface {
 
     @Override
     public OrderDto save(NewOrderDto newOrderDto) {
-        newOrderDto.setCreatedAt(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
+        newOrderDto.setStatus(Order.OrderStatus.NEW_ORDER.getStatus());
+        String format = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        newOrderDto.setCreatedAt(format);
+
         Order savedOrderItem = orderService.save(orderMapper.toEntityFromNewOrderDto(newOrderDto));
 
         return orderMapper.toOrderDtoFromEntity(savedOrderItem);
@@ -45,6 +50,8 @@ public class OrderFacade implements OrderFacadeInterface {
     @Override
     public OrderDto update(Long id, NewOrderDto newOrderDto) {
         Order newDataObject = orderMapper.toEntityFromNewOrderDto(newOrderDto);
+        User user = orderService.findById(id).getUser();
+        newDataObject.setUser(user);
 
         return orderMapper.toOrderDtoFromEntity(orderService.update(id, newDataObject));
     }
@@ -63,6 +70,17 @@ public class OrderFacade implements OrderFacadeInterface {
     public List<OrderDto> findAll() {
         return orderService.findAll().stream()
                 .map(orderMapper::toOrderDtoFromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<UserOrdersDto> findAllOrdersWitProducts() {
+
+        List<Order> orders = orderService.findAll();
+
+        return orders.stream()
+                .distinct()
+                .map(orderMapper::toUserOrdersDto)
                 .collect(Collectors.toList());
     }
 }

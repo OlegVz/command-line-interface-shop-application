@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -50,12 +51,23 @@ public class OrderMapper {
                             .map(orderItem -> orderItem.getProduct().getName())
                             .collect(Collectors.toList());
 
+                    List<Integer> prices = source.getOrderItems().stream()
+                            .map(orderItem -> orderItem.getProduct().getPrice())
+                            .collect(Collectors.toList());
+
                     List<Integer> quantityList = source.getOrderItems().stream()
                             .map(OrderItem::getQuantity)
                             .collect(Collectors.toList());
 
+                    ArrayList<Integer> totalPrices = new ArrayList<>();
+
+                    for (int i = 0; i < productsNames.size(); i++) {
+                        totalPrices.add(prices.get(i) * quantityList.get(i));
+                    }
+
                     destination.setProductNames(productsNames);
                     destination.setQuantity(quantityList);
+                    destination.setProductTotalPrice(totalPrices);
 
                     return context.getDestination();
                 }
