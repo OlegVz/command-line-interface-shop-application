@@ -75,7 +75,6 @@ public class OrderFacade implements OrderFacadeInterface {
 
     @Override
     public List<UserOrdersDto> findAllOrdersWitProducts() {
-
         List<Order> orders = orderService.findAll();
 
         return orders.stream()

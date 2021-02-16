@@ -1,4 +1,4 @@
-package com.hybris.shop.view.console;
+package com.hybris.shop.view.consoleInputOutput;
 
 import com.hybris.shop.annotations.ColumnNameAlias;
 import org.springframework.stereotype.Component;

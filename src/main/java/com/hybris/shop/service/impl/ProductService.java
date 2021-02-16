@@ -4,6 +4,7 @@ import com.hybris.shop.exceptions.productExceptions.ProductNotFoundByIdException
 import com.hybris.shop.exceptions.productExceptions.ProductWithSuchNameExistException;
 import com.hybris.shop.exceptions.productExceptions.ProductWithSuchNameNotExistException;
 import com.hybris.shop.model.Product;
+import com.hybris.shop.repository.OrderItemRepository;
 import com.hybris.shop.repository.ProductRepository;
 import com.hybris.shop.service.ProductServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +18,13 @@ import java.util.stream.StreamSupport;
 public class ProductService implements ProductServiceInterface {
 
     private final ProductRepository productRepository;
+    private final OrderItemRepository orderItemRepository;
 
     @Autowired
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository,
+                          OrderItemRepository orderItemRepository) {
         this.productRepository = productRepository;
+        this.orderItemRepository = orderItemRepository;
     }
 
     @Override
@@ -67,5 +71,15 @@ public class ProductService implements ProductServiceInterface {
     @Override
     public List<Product> sortProductsByNumberOfOrdersDesc() {
         return productRepository.sortProductsByNumberOfOrdersDesc();
+    }
+
+    @Override
+    public boolean existsByName(String name) {
+        return productRepository.existsByName(name);
+    }
+
+    @Override
+    public void deleteAll() {
+        productRepository.deleteAll();
     }
 }

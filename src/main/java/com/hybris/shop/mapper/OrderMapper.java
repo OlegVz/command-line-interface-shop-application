@@ -6,6 +6,7 @@ import com.hybris.shop.dto.UserOrdersDto;
 import com.hybris.shop.model.Order;
 import com.hybris.shop.model.OrderItem;
 import com.hybris.shop.model.User;
+import com.hybris.shop.repository.OrderItemRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,10 +21,13 @@ import java.util.stream.Collectors;
 public class OrderMapper {
 
     private final ModelMapper modelMapper;
+    private final OrderItemRepository orderItemRepository;
 
     @Autowired
-    public OrderMapper(ModelMapper modelMapper) {
+    public OrderMapper(ModelMapper modelMapper,
+                       OrderItemRepository orderItemRepository) {
         this.modelMapper = modelMapper;
+        this.orderItemRepository = orderItemRepository;
     }
 
     @PostConstruct
@@ -38,7 +42,7 @@ public class OrderMapper {
 
                     destination.setUser(user);
 
-                    return context.getDestination();
+                    return destination;
                 }
         );
 
@@ -47,15 +51,17 @@ public class OrderMapper {
                     Order source = context.getSource();
                     UserOrdersDto destination = context.getDestination();
 
-                    List<String> productsNames = source.getOrderItems().stream()
+                    List<OrderItem> orderItems = orderItemRepository.findAllByOrderId(source.getId());
+
+                    List<String> productsNames = orderItems.stream()
                             .map(orderItem -> orderItem.getProduct().getName())
                             .collect(Collectors.toList());
 
-                    List<Integer> prices = source.getOrderItems().stream()
+                    List<Integer> prices = orderItems.stream()
                             .map(orderItem -> orderItem.getProduct().getPrice())
                             .collect(Collectors.toList());
 
-                    List<Integer> quantityList = source.getOrderItems().stream()
+                    List<Integer> quantityList = orderItems.stream()
                             .map(OrderItem::getQuantity)
                             .collect(Collectors.toList());
 
@@ -65,11 +71,13 @@ public class OrderMapper {
                         totalPrices.add(prices.get(i) * quantityList.get(i));
                     }
 
+                    destination.setId(source.getId());
                     destination.setProductNames(productsNames);
                     destination.setQuantity(quantityList);
                     destination.setProductTotalPrice(totalPrices);
+                    destination.setCreatedAt(source.getCreatedAt());
 
-                    return context.getDestination();
+                    return destination;
                 }
         );
     }

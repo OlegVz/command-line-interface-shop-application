@@ -8,4 +8,8 @@ public interface ProductServiceInterface extends ServiceInterface<Product, Long>
     Product findByName(String name);
 
     List<Product> sortProductsByNumberOfOrdersDesc();
+
+    boolean existsByName(String name);
+
+    void deleteAll();
 }

@@ -10,8 +10,8 @@ import com.hybris.shop.facade.impl.ProductFacade;
 import com.hybris.shop.facade.impl.UserFacade;
 import com.hybris.shop.model.Order;
 import com.hybris.shop.model.Product;
-import com.hybris.shop.view.console.Input;
-import com.hybris.shop.view.console.Printer;
+import com.hybris.shop.view.consoleInputOutput.Input;
+import com.hybris.shop.view.consoleInputOutput.Printer;
 import com.hybris.shop.view.menu.userMenu.UserMenu;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,11 +22,12 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static com.hybris.shop.view.console.Input.command;
+import static com.hybris.shop.view.consoleInputOutput.Input.command;
 import static com.hybris.shop.view.menu.commands.CommandsValidator.*;
 import static com.hybris.shop.view.menu.userMenu.UserMenu.currentUserId;
 
 @Component
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class OrderMenu {
 
     private final Printer printer;
@@ -91,21 +92,32 @@ public class OrderMenu {
     private void listAllOrders() {
         printer.printLine("All orders list:\n");
 
-        printer.printTable(orderFacade.findAllOrdersWitProducts());
+        List<UserOrdersDto> allOrdersWitProducts = orderFacade.findAllOrdersWitProducts();
+
+        if (allOrdersWitProducts.isEmpty()) {
+            printer.printLine("No available orders");
+            return;
+        }
+
+        printer.printTable(allOrdersWitProducts);
     }
 
     private void updateOrderStatus() {
-        printer.printLine("Update order status menu\n");
+        printUpdateOrderMenu();
+
         NewOrderDto newOrderDto = new NewOrderDto();
-        userMenu.listUserOrders();
+        userMenu.printListOfUserOrders();
+
+        if (isBAckCommand(command)) {
+            return;
+        }
 
         Long orderId = setOrderId();
         if (isExitCommand(command) || isBAckCommand(command)) {
             return;
         }
-        do {
-            printUpdateOrderMenu();
 
+        do {
             command = input.getCommand();
             if (isExitCommand(command) || isBAckCommand(command)) {
                 return;
@@ -125,12 +137,17 @@ public class OrderMenu {
 
         if (confirmCommand("Save changes?")) {
             OrderDto updateOrder = orderFacade.update(orderId, newOrderDto);
+            printer.printLine("New order data\n");
             printer.printTable(List.of(updateOrder));
         }
     }
 
     private void deleteOrder() {
-        userMenu.listUserOrders();
+        userMenu.printListOfUserOrders();
+
+        if (isBAckCommand(command)) {
+            return;
+        }
 
         Long orderId = setOrderId();
 
@@ -156,6 +173,7 @@ public class OrderMenu {
         do {
             try {
                 printer.printLine("Select order id\n");
+
                 command = input.getCommand();
                 if (isExitCommand(command) || isBAckCommand(command)) {
                     break;
@@ -193,6 +211,11 @@ public class OrderMenu {
                     .filter(productDto -> !productDto.getStatus().equals(Product.ProductStatus.OUT_OF_STOCK))
                     .collect(Collectors.toList());
 
+            if (productDtoList.isEmpty()) {
+                printer.printLine("No available products!");
+                return;
+            }
+
             printer.printLine("Product list\n");
             printer.printTable(productDtoList);
 
@@ -223,7 +246,8 @@ public class OrderMenu {
                 orderItemFacade.save(newOrderItemDto);
             });
 
-            List<UserOrdersDto> userOrderDtos = userFacade.findAllUserOrders(currentUserId).stream()
+            List<UserOrdersDto> allUserOrders = userFacade.findAllUserOrders(currentUserId);
+            List<UserOrdersDto> userOrderDtos = allUserOrders.stream()
                     .filter(userOrdersDto -> userOrdersDto.getId().equals(orderId))
                     .collect(Collectors.toList());
 
@@ -287,7 +311,6 @@ public class OrderMenu {
             } catch (ProductOutOfStockException ex) {
                 printer.printLine("Please input product id from table\n");
             }
-
         } while (!b);
 
         return productId;
@@ -304,6 +327,7 @@ public class OrderMenu {
     }
 
     private void printUpdateOrderMenu() {
+        printer.printLine("Update order status menu\n");
         printer.printLine(" - to change order status on 'Confirmed order' press '1'\n");
         printer.printLine(" - to change order status on 'Ful filled order' press '2'\n");
         printer.printLine("Back to previous menu input 'back'\n");
