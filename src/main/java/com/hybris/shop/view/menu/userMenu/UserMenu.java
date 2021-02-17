@@ -302,7 +302,7 @@ public class UserMenu {
         NewUserDto newUserDto = new NewUserDto();
 
         do {
-            printer.printLine("Input login");
+            printer.printLine("Input login\n");
 
             command = input.getCommand();
             if (isExitCommand(command) || isBAckCommand(command)) {
@@ -311,7 +311,7 @@ public class UserMenu {
 
             newUserDto.setEmail(command);
 
-            printer.printLine("Input password");
+            printer.printLine("Input password\n");
 
             command = input.getCommand();
             if (isExitCommand(command) || isBAckCommand(command)) {
