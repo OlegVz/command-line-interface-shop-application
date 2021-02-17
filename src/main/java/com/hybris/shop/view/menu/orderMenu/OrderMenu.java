@@ -95,7 +95,7 @@ public class OrderMenu {
         List<UserOrdersDto> allOrdersWitProducts = orderFacade.findAllOrdersWitProducts();
 
         if (allOrdersWitProducts.isEmpty()) {
-            printer.printLine("No available orders");
+            printer.printLine("No available orders\n");
             return;
         }
 
