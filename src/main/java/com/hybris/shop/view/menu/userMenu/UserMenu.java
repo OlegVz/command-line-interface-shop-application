@@ -243,10 +243,22 @@ public class UserMenu {
     public void userRegistration() {
         NewUserDto newUserDto = new NewUserDto();
 
-        validateAndSetEmail("Input user email", newUserDto);
-        if (isExitCommand(command) || isBAckCommand(command)) {
-            return;
-        }
+        boolean b;
+
+        do {
+            validateAndSetEmail("Input user email", newUserDto);
+            if (isExitCommand(command) || isBAckCommand(command)) {
+                return;
+            }
+
+            String userEmail = newUserDto.getEmail();
+
+            b = userFacade.existsByEmail(userEmail);
+
+            if (b) {
+                printer.printLine(String.format("User with such email '%s' exist\n", userEmail));
+            }
+        } while (b);
 
         validateAndSetPassword("Input password", newUserDto);
         if (isExitCommand(command) || isBAckCommand(command)) {
@@ -302,7 +314,7 @@ public class UserMenu {
         NewUserDto newUserDto = new NewUserDto();
 
         do {
-            printer.printLine("Input login");
+            printer.printLine("Input login\n");
 
             command = input.getCommand();
             if (isExitCommand(command) || isBAckCommand(command)) {
@@ -311,7 +323,7 @@ public class UserMenu {
 
             newUserDto.setEmail(command);
 
-            printer.printLine("Input password");
+            printer.printLine("Input password\n");
 
             command = input.getCommand();
             if (isExitCommand(command) || isBAckCommand(command)) {
