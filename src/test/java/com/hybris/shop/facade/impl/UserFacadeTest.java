@@ -132,10 +132,6 @@ class UserFacadeTest {
     }
 
     @Test
-    void update() {
-    }
-
-    @Test
     void shouldReturnTrueWhenExistById() {
         //given
         //when

@@ -19,6 +19,7 @@
 		<h2.version>1.4.200</h2.version>
 		<modelmapper.vercion>2.3.9</modelmapper.vercion>
 		<spring-data-jpa.version>2.4.3</spring-data-jpa.version>
+		<mockito.vercion>3.6.28</mockito.vercion>
 	</properties>
 
 	<dependencies>
@@ -64,6 +65,19 @@
 			<groupId>org.modelmapper</groupId>
 			<artifactId>modelmapper</artifactId>
 			<version>${modelmapper.vercion}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-inline</artifactId>
+			<version>${mockito.version}</version>
+			<scope>test</scope>
 		</dependency>
 
 	</dependencies>
