@@ -20,6 +20,7 @@
 		<modelmapper.vercion>2.3.9</modelmapper.vercion>
 		<spring-data-jpa.version>2.4.3</spring-data-jpa.version>
 		<mockito.vercion>3.6.28</mockito.vercion>
+		<javax.vercion>4.0.1</javax.vercion>
 	</properties>
 
 	<dependencies>
@@ -79,6 +80,21 @@
 			<version>${mockito.version}</version>
 			<scope>test</scope>
 		</dependency>
+
+<!--		<dependency>-->
+<!--			<groupId>javax.servlet</groupId>-->
+<!--			<artifactId>javax.servlet-api</artifactId>-->
+<!--			<version>${javax.vercion}</version>-->
+<!--			<scope>provided</scope>-->
+<!--		</dependency>-->
+		<dependency>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
+			<version>5.0.0</version>
+			<scope>provided</scope>
+		</dependency>
+
+
 
 	</dependencies>
 
