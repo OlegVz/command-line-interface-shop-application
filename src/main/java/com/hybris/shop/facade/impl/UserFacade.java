@@ -12,13 +12,11 @@ import com.hybris.shop.mapper.UserMapper;
 import com.hybris.shop.model.Order;
 import com.hybris.shop.model.User;
 import com.hybris.shop.service.impl.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
+//@Component
 public class UserFacade implements UserFacadeInterface {
 
     private final UserService userService;
@@ -26,7 +24,7 @@ public class UserFacade implements UserFacadeInterface {
     private final UserMapper userMapper;
     private final OrderMapper orderMapper;
 
-    @Autowired
+//    @Autowired
     public UserFacade(UserService userService,
                       UserMapper userMapper,
                       OrderMapper orderMapper) {

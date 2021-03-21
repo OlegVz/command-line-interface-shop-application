@@ -5,9 +5,10 @@ public enum Commands {
     BACK("back"),
     SUCCESS("success"),
     YES("y"),
-    NO("n");
+    NO("n"),
+    LOGOUT("logout");
 
-    private String command;
+    private final String command;
 
     Commands(String command) {
         this.command = command;

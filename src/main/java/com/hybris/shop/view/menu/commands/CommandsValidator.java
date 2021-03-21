@@ -2,23 +2,22 @@ package com.hybris.shop.view.menu.commands;
 
 import com.hybris.shop.view.consoleInputOutput.Input;
 import com.hybris.shop.view.consoleInputOutput.Printer;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import static com.hybris.shop.view.consoleInputOutput.Input.command;
 
-@Component
+//@Component
 public class CommandsValidator {
     private static final String EXIT_COMMAND = Commands.EXIT.getCommand();
     public static final String BACK_COMMAND = Commands.BACK.getCommand();
     private static final String SUCCESS_COMMAND = Commands.SUCCESS.getCommand();
     private static final String YES_COMMAND = Commands.YES.getCommand();
     private static final String NO_COMMAND = Commands.NO.getCommand();
+    private static final String LOGOUT_COMMAND = Commands.LOGOUT.getCommand();
 
     private static Printer<String> printer;
     private static Input input;
 
-    @Autowired
+//    @Autowired
     public CommandsValidator(Printer<String> printer, Input input) {
         CommandsValidator.printer = printer;
         CommandsValidator.input = input;
@@ -40,6 +39,10 @@ public class CommandsValidator {
 
     public static boolean isExitCommand(String command) {
         return EXIT_COMMAND.equals(command);
+    }
+
+    public static boolean isLogOutCommand(String command) {
+        return LOGOUT_COMMAND.equals(command);
     }
 
     public static boolean isBAckCommand(String command) {

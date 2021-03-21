@@ -7,20 +7,18 @@ import com.hybris.shop.facade.ProductFacadeInterface;
 import com.hybris.shop.mapper.ProductMapper;
 import com.hybris.shop.model.Product;
 import com.hybris.shop.service.impl.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
+//@Component
 public class ProductFacade implements ProductFacadeInterface {
 
     private final ProductService productService;
 
     private final ProductMapper productMapper;
 
-    @Autowired
+//    @Autowired
     public ProductFacade(ProductService productService,
                          ProductMapper productMapper) {
         this.productService = productService;

@@ -7,20 +7,18 @@ import com.hybris.shop.model.Product;
 import com.hybris.shop.repository.OrderItemRepository;
 import com.hybris.shop.repository.ProductRepository;
 import com.hybris.shop.service.ProductServiceInterface;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-@Service
+//@Service
 public class ProductService implements ProductServiceInterface {
 
     private final ProductRepository productRepository;
     private final OrderItemRepository orderItemRepository;
 
-    @Autowired
+//    @Autowired
     public ProductService(ProductRepository productRepository,
                           OrderItemRepository orderItemRepository) {
         this.productRepository = productRepository;

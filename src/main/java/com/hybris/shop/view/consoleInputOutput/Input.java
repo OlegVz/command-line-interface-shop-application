@@ -1,17 +1,14 @@
 package com.hybris.shop.view.consoleInputOutput;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import java.util.Scanner;
 
-@Component
+//@Component
 public class Input {
     public static String command;
 
     private final Printer<String> printer;
 
-    @Autowired
+//    @Autowired
     public Input(Printer<String> printer) {
         this.printer = printer;
     }

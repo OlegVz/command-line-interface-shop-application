@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/data/jpa https://www.springframework.org/schema/data/jpa/spring-jpa.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:component-scan base-package="com.hybris.shop"/>
+    <jpa:repositories base-package="com.hybris.shop.repository"/>
+
+    <!-- needed to pick up the annotated java-config -->
+    <context:annotation-config />
+    <!-- Importing java-config class, which are annotated with @Configuration -->
+    <bean name="shopApplicationConfig1" class="com.hybris.shop.config.ShopApplicationConfig" />
+
+    <bean name="orderMapper" class="com.hybris.shop.mapper.OrderMapper">
+        <constructor-arg ref="modelMapper"/>
+        <constructor-arg ref="orderItemRepository"/>
+    </bean>
+    <bean name="productMapper" class="com.hybris.shop.mapper.ProductMapper">
+        <constructor-arg ref="modelMapper"/>
+    </bean>
+    <bean name="userMapper" class="com.hybris.shop.mapper.UserMapper">
+        <constructor-arg ref="modelMapper"/>
+    </bean>
+    <bean name="orderItemMapper" class="com.hybris.shop.mapper.OrderItemMapper">
+        <constructor-arg ref="modelMapper"/>
+        <constructor-arg ref="orderRepository"/>
+        <constructor-arg ref="productRepository"/>
+        <constructor-arg ref="orderItemRepository"/>
+        <constructor-arg ref="productMapper"/>
+        <constructor-arg ref="orderMapper"/>
+    </bean>
+
+    <bean id="emailValidatorUtil" class="com.hybris.shop.util.EmailValidatorUtil"/>
+    <bean id="passwordValidatorUtil" class="com.hybris.shop.util.PasswordValidatorUtil"/>
+
+    <bean id="userService" class="com.hybris.shop.service.impl.UserService">
+        <constructor-arg ref="userRepository"/>
+    </bean>
+    <bean id="orderService" class="com.hybris.shop.service.impl.OrderService">
+        <constructor-arg ref="orderRepository"/>
+        <constructor-arg ref="userRepository"/>
+    </bean>
+    <bean id="orderItemService" class="com.hybris.shop.service.impl.OrderItemService">
+        <constructor-arg ref="orderItemRepository"/>
+        <constructor-arg ref="orderRepository"/>
+        <constructor-arg ref="productRepository"/>
+    </bean>
+    <bean id="productService" class="com.hybris.shop.service.impl.ProductService">
+        <constructor-arg ref="productRepository"/>
+        <constructor-arg ref="orderItemRepository"/>
+    </bean>
+
+    <bean id="orderFacade" class="com.hybris.shop.facade.impl.OrderFacade">
+        <constructor-arg ref="orderService"/>
+        <constructor-arg ref="orderMapper"/>
+    </bean>
+    <bean id="orderItemFacade" class="com.hybris.shop.facade.impl.OrderItemFacade">
+        <constructor-arg ref="orderItemService"/>
+        <constructor-arg ref="orderItemMapper"/>
+    </bean>
+    <bean id="productFacade" class="com.hybris.shop.facade.impl.ProductFacade">
+        <constructor-arg ref="productService"/>
+        <constructor-arg ref="productMapper"/>
+    </bean>
+    <bean id="userFacade" class="com.hybris.shop.facade.impl.UserFacade">
+        <constructor-arg ref="userService"/>
+        <constructor-arg ref="userMapper"/>
+        <constructor-arg ref="orderMapper"/>
+    </bean>
+
+    <bean id="printer" class="com.hybris.shop.view.consoleInputOutput.Printer"/>
+    <bean id="input" class="com.hybris.shop.view.consoleInputOutput.Input">
+        <constructor-arg ref="printer"/>
+    </bean>
+
+    <bean id="commandsValidator" class="com.hybris.shop.view.menu.commands.CommandsValidator">
+        <constructor-arg ref="printer"/>
+        <constructor-arg ref="input"/>
+    </bean>
+
+    <bean id="mainMenu" class="com.hybris.shop.view.menu.MainMenu" lazy-init="true">
+        <constructor-arg ref="input"/>
+        <constructor-arg ref="printer"/>
+        <constructor-arg ref="userMenu"/>
+        <constructor-arg ref="orderMenu"/>
+        <constructor-arg ref="productMenu"/>
+    </bean>
+    <bean id="userMenu" class="com.hybris.shop.view.menu.userMenu.UserMenu">
+        <constructor-arg ref="userFacade"/>
+        <constructor-arg ref="printer"/>
+        <constructor-arg ref="input"/>
+        <constructor-arg ref="emailValidatorUtil"/>
+        <constructor-arg ref="passwordValidatorUtil"/>
+    </bean>
+    <bean id="orderMenu" class="com.hybris.shop.view.menu.orderMenu.OrderMenu">
+        <constructor-arg ref="printer"/>
+        <constructor-arg ref="input"/>
+        <constructor-arg ref="productFacade"/>
+        <constructor-arg ref="orderItemFacade"/>
+        <constructor-arg ref="userFacade"/>
+        <constructor-arg ref="userMenu"/>
+    </bean>
+    <bean id="productMenu" class="com.hybris.shop.view.menu.productMenu.ProductMenu">
+        <constructor-arg ref="printer"/>
+        <constructor-arg ref="input"/>
+        <constructor-arg ref="productFacade"/>
+        <constructor-arg ref="userMenu"/>
+    </bean>
+
+
+</beans>

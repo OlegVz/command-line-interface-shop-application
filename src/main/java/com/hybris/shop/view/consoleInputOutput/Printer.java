@@ -1,7 +1,6 @@
 package com.hybris.shop.view.consoleInputOutput;
 
 import com.hybris.shop.annotations.ColumnNameAlias;
-import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -10,7 +9,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@Component
+//@Component
 public class Printer<T> {
 
     private static final String ROW_END = "|\n";

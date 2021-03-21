@@ -11,15 +11,13 @@ import com.hybris.shop.repository.OrderItemRepository;
 import com.hybris.shop.repository.OrderRepository;
 import com.hybris.shop.repository.ProductRepository;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-@Component
+//@Component
 public class OrderItemMapper {
 
     private final ModelMapper modelMapper;
@@ -29,7 +27,7 @@ public class OrderItemMapper {
     private final ProductMapper productMapper;
     private final OrderMapper orderMapper;
 
-    @Autowired
+//    @Autowired
     public OrderItemMapper(ModelMapper modelMapper,
                            OrderRepository orderRepository,
                            ProductRepository productRepository,

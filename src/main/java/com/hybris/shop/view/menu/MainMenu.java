@@ -6,13 +6,11 @@ import com.hybris.shop.view.menu.commands.Commands;
 import com.hybris.shop.view.menu.orderMenu.OrderMenu;
 import com.hybris.shop.view.menu.productMenu.ProductMenu;
 import com.hybris.shop.view.menu.userMenu.UserMenu;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import static com.hybris.shop.view.consoleInputOutput.Input.command;
 import static com.hybris.shop.view.menu.commands.CommandsValidator.*;
 
-@Component
+//@Component
 public class MainMenu {
 
     private final Input input;
@@ -22,7 +20,7 @@ public class MainMenu {
     private final OrderMenu orderMenu;
     private final ProductMenu productMenu;
 
-    @Autowired
+//    @Autowired
     public MainMenu(Input input,
                     Printer<String> printer,
                     UserMenu userMenu,
@@ -96,6 +94,9 @@ public class MainMenu {
             switch (command) {
                 case "1":
                     userMenu.menu();
+                    if (isLogOutCommand(command)) {
+                        menu();
+                    }
                     break;
                 case "2":
                     orderMenu.menu();

@@ -13,8 +13,6 @@ import com.hybris.shop.model.Product;
 import com.hybris.shop.view.consoleInputOutput.Input;
 import com.hybris.shop.view.consoleInputOutput.Printer;
 import com.hybris.shop.view.menu.userMenu.UserMenu;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +24,7 @@ import static com.hybris.shop.view.consoleInputOutput.Input.command;
 import static com.hybris.shop.view.menu.commands.CommandsValidator.*;
 import static com.hybris.shop.view.menu.userMenu.UserMenu.currentUserId;
 
-@Component
+//@Component
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class OrderMenu {
 
@@ -40,7 +38,7 @@ public class OrderMenu {
 
     private final UserMenu userMenu;
 
-    @Autowired
+//    @Autowired
     public OrderMenu(OrderFacade orderFacade,
                      Printer printer,
                      Input input,

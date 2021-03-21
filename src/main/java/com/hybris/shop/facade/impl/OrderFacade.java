@@ -8,22 +8,20 @@ import com.hybris.shop.mapper.OrderMapper;
 import com.hybris.shop.model.Order;
 import com.hybris.shop.model.User;
 import com.hybris.shop.service.impl.OrderService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
+//@Component
 public class OrderFacade implements OrderFacadeInterface {
 
     private final OrderService orderService;
 
     private final OrderMapper orderMapper;
 
-    @Autowired
+//    @Autowired
     public OrderFacade(OrderService orderService, OrderMapper orderMapper) {
         this.orderService = orderService;
         this.orderMapper = orderMapper;

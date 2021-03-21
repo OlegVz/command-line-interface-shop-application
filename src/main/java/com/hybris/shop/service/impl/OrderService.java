@@ -6,20 +6,18 @@ import com.hybris.shop.model.Order;
 import com.hybris.shop.repository.OrderRepository;
 import com.hybris.shop.repository.UserRepository;
 import com.hybris.shop.service.ServiceInterface;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-@Service
+//@Service
 public class OrderService implements ServiceInterface<Order, Long> {
 
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
 
-    @Autowired
+//    @Autowired
     public OrderService(OrderRepository orderRepository, UserRepository userRepository) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;

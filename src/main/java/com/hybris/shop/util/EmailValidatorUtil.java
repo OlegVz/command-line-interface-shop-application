@@ -1,11 +1,9 @@
 package com.hybris.shop.util;
 
-import org.springframework.stereotype.Component;
-
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-@Component
+//@Component
 public class EmailValidatorUtil {
 
     private static final String EMAIL_REGEX =

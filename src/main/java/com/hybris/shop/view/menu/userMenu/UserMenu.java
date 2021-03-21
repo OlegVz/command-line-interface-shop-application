@@ -10,11 +10,7 @@ import com.hybris.shop.util.EmailValidatorUtil;
 import com.hybris.shop.util.PasswordValidatorUtil;
 import com.hybris.shop.view.consoleInputOutput.Input;
 import com.hybris.shop.view.consoleInputOutput.Printer;
-import com.hybris.shop.view.menu.MainMenu;
 import com.hybris.shop.view.menu.commands.Commands;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Component;
 
 import java.util.Comparator;
 import java.util.List;
@@ -23,7 +19,7 @@ import java.util.stream.Collectors;
 import static com.hybris.shop.view.consoleInputOutput.Input.command;
 import static com.hybris.shop.view.menu.commands.CommandsValidator.*;
 
-@Component
+//@Component
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class UserMenu {
 
@@ -37,23 +33,20 @@ public class UserMenu {
 
     private final UserFacade userFacade;
 
-    private final MainMenu mainMenu;
-
     public static Long currentUserId;
 
-    @Autowired
+    //    @Autowired
     public UserMenu(UserFacade userFacade,
                     Printer printer,
                     Input input,
                     EmailValidatorUtil emailValidatorUtil,
-                    PasswordValidatorUtil passwordValidatorUtil,
-                    @Lazy MainMenu mainMenu) {
+                    PasswordValidatorUtil passwordValidatorUtil/*,
+                    @Lazy MainMenu mainMenu*/) {
         this.userFacade = userFacade;
         this.printer = printer;
         this.input = input;
         this.emailValidatorUtil = emailValidatorUtil;
         this.passwordValidatorUtil = passwordValidatorUtil;
-        this.mainMenu = mainMenu;
     }
 
     public void menu() {
@@ -74,9 +67,15 @@ public class UserMenu {
                     break;
                 case "3":
                     logOut();
+                    if (isLogOutCommand(command)) {
+                        return;
+                    }
                     break;
                 case "4":
                     deleteCurrentUser();
+                    if (isLogOutCommand(command)) {
+                        return;
+                    }
                     break;
                 case "5":
                     deleteUserById();
@@ -225,19 +224,14 @@ public class UserMenu {
     private void deleteCurrentUser() {
         if (confirmCommand("Confirm delete user?")) {
             userFacade.deleteById(currentUserId);
-            returnToMainMenu();
+            command = Commands.LOGOUT.getCommand();
         }
     }
 
     private void logOut() {
         if (confirmCommand("Log out?")) {
-            returnToMainMenu();
+            command = Commands.LOGOUT.getCommand();
         }
-    }
-
-    private void returnToMainMenu() {
-        currentUserId = null;
-        mainMenu.menu();
     }
 
     public void userRegistration() {

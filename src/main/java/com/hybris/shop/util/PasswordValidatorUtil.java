@@ -1,10 +1,8 @@
 package com.hybris.shop.util;
 
-import org.springframework.stereotype.Component;
-
 import java.util.regex.Pattern;
 
-@Component
+//@Component
 public class PasswordValidatorUtil {
 
 private static final String PASSWORD_REGEX =

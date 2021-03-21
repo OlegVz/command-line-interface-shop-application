@@ -9,8 +9,6 @@ import com.hybris.shop.view.consoleInputOutput.Input;
 import com.hybris.shop.view.consoleInputOutput.Printer;
 import com.hybris.shop.view.menu.commands.CommandsValidator;
 import com.hybris.shop.view.menu.userMenu.UserMenu;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -20,7 +18,7 @@ import java.util.Objects;
 import static com.hybris.shop.view.consoleInputOutput.Input.command;
 import static com.hybris.shop.view.menu.commands.CommandsValidator.*;
 
-@Component
+//@Component
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class ProductMenu {
 
@@ -31,7 +29,7 @@ public class ProductMenu {
 
     private final UserMenu userMenu;
 
-    @Autowired
+//    @Autowired
     public ProductMenu(Printer printer,
                        Input input,
                        ProductFacade productFacade,

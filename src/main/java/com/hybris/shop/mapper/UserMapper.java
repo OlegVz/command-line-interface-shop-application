@@ -4,17 +4,15 @@ import com.hybris.shop.dto.NewUserDto;
 import com.hybris.shop.dto.UserDto;
 import com.hybris.shop.model.User;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
-@Component
+//@Component
 public class UserMapper {
 
     private final ModelMapper modelMapper;
 
-    @Autowired
+//    @Autowired
     public UserMapper(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
     }

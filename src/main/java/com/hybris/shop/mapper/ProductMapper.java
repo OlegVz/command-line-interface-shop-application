@@ -4,15 +4,15 @@ import com.hybris.shop.dto.NewProductDto;
 import com.hybris.shop.dto.ProductDto;
 import com.hybris.shop.model.Product;
 import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
-@Component
+//@Component
 public class ProductMapper {
 
     private final ModelMapper modelMapper;
 
+//    @Autowired
     public ProductMapper(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
     }

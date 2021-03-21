@@ -8,8 +8,6 @@ import com.hybris.shop.model.OrderItem;
 import com.hybris.shop.model.User;
 import com.hybris.shop.repository.OrderItemRepository;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -17,13 +15,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@Component
+//@Component
 public class OrderMapper {
 
     private final ModelMapper modelMapper;
     private final OrderItemRepository orderItemRepository;
 
-    @Autowired
+//    @Autowired
     public OrderMapper(ModelMapper modelMapper,
                        OrderItemRepository orderItemRepository) {
         this.modelMapper = modelMapper;

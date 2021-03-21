@@ -9,20 +9,18 @@ import com.hybris.shop.mapper.OrderItemMapper;
 import com.hybris.shop.model.OrderItem;
 import com.hybris.shop.model.idClasses.OrderItemId;
 import com.hybris.shop.service.impl.OrderItemService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
+//@Component
 public class OrderItemFacade implements OrderItemFacadeInterface {
 
     private final OrderItemService orderItemService;
 
     private final OrderItemMapper orderItemMapper;
 
-    @Autowired
+//    @Autowired
     public OrderItemFacade(OrderItemService orderItemService, OrderItemMapper orderItemMapper) {
         this.orderItemService = orderItemService;
         this.orderItemMapper = orderItemMapper;
