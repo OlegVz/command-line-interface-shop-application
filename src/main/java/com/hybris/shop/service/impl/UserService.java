@@ -12,12 +12,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-@Service
+//@Service
 public class UserService implements UserServiceInterface {
 
     private final UserRepository userRepository;
 
-    @Autowired
+//    @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
