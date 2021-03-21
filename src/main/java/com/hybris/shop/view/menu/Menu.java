@@ -1,38 +1,37 @@
 package com.hybris.shop.view.menu;
 
-import com.hybris.shop.view.consoleInputOutput.Input;
-import com.hybris.shop.view.consoleInputOutput.Printer;
+import com.hybris.shop.view.consoleInputOutput.InputInterface;
+import com.hybris.shop.view.consoleInputOutput.PrinterInterface;
 import com.hybris.shop.view.menu.commands.Commands;
-import com.hybris.shop.view.menu.orderMenu.OrderMenu;
-import com.hybris.shop.view.menu.productMenu.ProductMenu;
-import com.hybris.shop.view.menu.userMenu.UserMenu;
+import com.hybris.shop.view.menu.userMenu.UserMenuInterface;
 
-import static com.hybris.shop.view.consoleInputOutput.Input.command;
+import static com.hybris.shop.view.consoleInputOutput.impl.Input.command;
 import static com.hybris.shop.view.menu.commands.CommandsValidator.*;
 
 //@Component
-public class MainMenu {
+public class Menu implements MenuInterface {
 
-    private final Input input;
-    private final Printer<String> printer;
+    private final InputInterface inputInterface;
+    private final PrinterInterface<String> printerInterface;
 
-    private final UserMenu userMenu;
-    private final OrderMenu orderMenu;
-    private final ProductMenu productMenu;
+    private final UserMenuInterface userMenu;
+    private final MenuInterface orderMenu;
+    private final MenuInterface productMenu;
 
 //    @Autowired
-    public MainMenu(Input input,
-                    Printer<String> printer,
-                    UserMenu userMenu,
-                    OrderMenu orderMenu,
-                    ProductMenu productMenu) {
-        this.input = input;
-        this.printer = printer;
+    public Menu(InputInterface inputInterface,
+                PrinterInterface<String> printerInterface,
+                UserMenuInterface userMenu,
+                MenuInterface orderMenu,
+                MenuInterface productMenu) {
+        this.inputInterface = inputInterface;
+        this.printerInterface = printerInterface;
         this.userMenu = userMenu;
         this.orderMenu = orderMenu;
         this.productMenu = productMenu;
     }
 
+    @Override
     public void menu() {
         helloMenu();
 
@@ -40,14 +39,14 @@ public class MainMenu {
             mainMenu();
         }
 
-        printer.printLine("Goodbye!\n");
+        printerInterface.printLine("Goodbye!\n");
     }
 
     private void helloMenu() {
         do {
             printHelloMenu();
 
-            command = input.getCommand();
+            command = inputInterface.getCommand();
             if (isExitCommand(command)) {
                 if (confirmCommand("Close program?")) {
                     command = Commands.EXIT.getCommand();
@@ -65,7 +64,7 @@ public class MainMenu {
                     userMenu.userLogin();
                     break;
                 default:
-                    printer.printLine("Invalid command: " + command + "\n");
+                    printerInterface.printLine("Invalid command: " + command + "\n");
             }
             if (isExitCommand(command)) {
                 if (confirmCommand("Close program?")) {
@@ -82,7 +81,7 @@ public class MainMenu {
         do {
             printMainMenu();
 
-            command = input.getCommand();
+            command = inputInterface.getCommand();
             if (isExitCommand(command)) {
                 if (confirmCommand("Close program?")) {
                     return;
@@ -105,7 +104,7 @@ public class MainMenu {
                     productMenu.menu();
                     break;
                 default:
-                    printer.printLine("Invalid command: " + command + "\n");
+                    printerInterface.printLine("Invalid command: " + command + "\n");
             }
 
             if (isExitCommand(command)) {
@@ -120,17 +119,17 @@ public class MainMenu {
     }
 
     private void printHelloMenu() {
-        printer.printLine("Please log in or create new account\n");
-        printer.printLine("\t- to create new account press '1'\n");
-        printer.printLine("\t- to log in press '2';\n");
-        printer.printLine("Exit from program input 'exit'\n");
+        printerInterface.printLine("Please log in or create new account\n");
+        printerInterface.printLine("\t- to create new account press '1'\n");
+        printerInterface.printLine("\t- to log in press '2';\n");
+        printerInterface.printLine("Exit from program input 'exit'\n");
     }
 
     private void printMainMenu() {
-        printer.printLine("Please, input your command:\n");
-        printer.printLine("\t- to select user menu press '1';\n");
-        printer.printLine("\t- to select order menu press '2';\n");
-        printer.printLine("\t- to select product menu press '3';\n");
-        printer.printLine("Exit from program input 'exit'\n");
+        printerInterface.printLine("Please, input your command:\n");
+        printerInterface.printLine("\t- to select user menu press '1';\n");
+        printerInterface.printLine("\t- to select order menu press '2';\n");
+        printerInterface.printLine("\t- to select product menu press '3';\n");
+        printerInterface.printLine("Exit from program input 'exit'\n");
     }
 }

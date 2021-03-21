@@ -4,9 +4,9 @@ import com.hybris.shop.dto.NewProductDto;
 import com.hybris.shop.dto.ProductDto;
 import com.hybris.shop.exceptions.productExceptions.ProductNotFoundByIdException;
 import com.hybris.shop.facade.ProductFacadeInterface;
-import com.hybris.shop.mapper.ProductMapper;
+import com.hybris.shop.mapper.ProductMapperInterface;
 import com.hybris.shop.model.Product;
-import com.hybris.shop.service.impl.ProductService;
+import com.hybris.shop.service.ProductServiceInterface;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,29 +14,29 @@ import java.util.stream.Collectors;
 //@Component
 public class ProductFacade implements ProductFacadeInterface {
 
-    private final ProductService productService;
+    private final ProductServiceInterface productService;
 
-    private final ProductMapper productMapper;
+    private final ProductMapperInterface productMapperInterface;
 
 //    @Autowired
-    public ProductFacade(ProductService productService,
-                         ProductMapper productMapper) {
+    public ProductFacade(ProductServiceInterface productService,
+                         ProductMapperInterface productMapperInterface) {
         this.productService = productService;
-        this.productMapper = productMapper;
+        this.productMapperInterface = productMapperInterface;
     }
 
     @Override
     public ProductDto save(NewProductDto newProductDto) {
-        Product savedProduct = productService.save(productMapper.fromNewProductDtoToEntity(newProductDto));
+        Product savedProduct = productService.save(productMapperInterface.fromNewProductDtoToEntity(newProductDto));
 
-        return productMapper.fromEntityToProductDto(savedProduct);
+        return productMapperInterface.fromEntityToProductDto(savedProduct);
     }
 
     @Override
     public ProductDto findById(Long id) {
         Product productById = productService.findById(id);
 
-        return productMapper.fromEntityToProductDto(productById);
+        return productMapperInterface.fromEntityToProductDto(productById);
     }
 
     @Override
@@ -45,9 +45,9 @@ public class ProductFacade implements ProductFacadeInterface {
             throw new ProductNotFoundByIdException(id);
         }
 
-        Product updatedProduct = productService.update(id, productMapper.fromNewProductDtoToEntity(newProductDto));
+        Product updatedProduct = productService.update(id, productMapperInterface.fromNewProductDtoToEntity(newProductDto));
 
-        return productMapper.fromEntityToProductDto(updatedProduct);
+        return productMapperInterface.fromEntityToProductDto(updatedProduct);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class ProductFacade implements ProductFacadeInterface {
     @Override
     public List<ProductDto> findAll() {
         return productService.findAll().stream()
-                .map(productMapper::fromEntityToProductDto)
+                .map(productMapperInterface::fromEntityToProductDto)
                 .collect(Collectors.toList());
     }
 
@@ -77,7 +77,7 @@ public class ProductFacade implements ProductFacadeInterface {
         List<Product> products = productService.sortProductsByNumberOfOrdersDesc();
 
         return products.stream()
-                .map(productMapper::fromEntityToProductDto)
+                .map(productMapperInterface::fromEntityToProductDto)
                 .collect(Collectors.toList());
     }
 

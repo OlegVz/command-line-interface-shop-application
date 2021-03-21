@@ -12,17 +12,17 @@
     <!-- Importing java-config class, which are annotated with @Configuration -->
     <bean name="shopApplicationConfig1" class="com.hybris.shop.config.ShopApplicationConfig" />
 
-    <bean name="orderMapper" class="com.hybris.shop.mapper.OrderMapper">
+    <bean name="orderMapper" class="com.hybris.shop.mapper.impl.OrderMapper">
         <constructor-arg ref="modelMapper"/>
         <constructor-arg ref="orderItemRepository"/>
     </bean>
-    <bean name="productMapper" class="com.hybris.shop.mapper.ProductMapper">
+    <bean name="productMapper" class="com.hybris.shop.mapper.impl.ProductMapper">
         <constructor-arg ref="modelMapper"/>
     </bean>
-    <bean name="userMapper" class="com.hybris.shop.mapper.UserMapper">
+    <bean name="userMapper" class="com.hybris.shop.mapper.impl.UserMapper">
         <constructor-arg ref="modelMapper"/>
     </bean>
-    <bean name="orderItemMapper" class="com.hybris.shop.mapper.OrderItemMapper">
+    <bean name="orderItemMapper" class="com.hybris.shop.mapper.impl.OrderItemMapper">
         <constructor-arg ref="modelMapper"/>
         <constructor-arg ref="orderRepository"/>
         <constructor-arg ref="productRepository"/>
@@ -31,8 +31,8 @@
         <constructor-arg ref="orderMapper"/>
     </bean>
 
-    <bean id="emailValidatorUtil" class="com.hybris.shop.util.EmailValidatorUtil"/>
-    <bean id="passwordValidatorUtil" class="com.hybris.shop.util.PasswordValidatorUtil"/>
+    <bean id="emailValidatorUtil" class="com.hybris.shop.util.impl.EmailValidatorUtil"/>
+    <bean id="passwordValidatorUtil" class="com.hybris.shop.util.impl.PasswordValidatorUtil"/>
 
     <bean id="userService" class="com.hybris.shop.service.impl.UserService">
         <constructor-arg ref="userRepository"/>
@@ -69,8 +69,8 @@
         <constructor-arg ref="orderMapper"/>
     </bean>
 
-    <bean id="printer" class="com.hybris.shop.view.consoleInputOutput.Printer"/>
-    <bean id="input" class="com.hybris.shop.view.consoleInputOutput.Input">
+    <bean id="printer" class="com.hybris.shop.view.consoleInputOutput.impl.Printer"/>
+    <bean id="input" class="com.hybris.shop.view.consoleInputOutput.impl.Input">
         <constructor-arg ref="printer"/>
     </bean>
 
@@ -79,7 +79,7 @@
         <constructor-arg ref="input"/>
     </bean>
 
-    <bean id="mainMenu" class="com.hybris.shop.view.menu.MainMenu" lazy-init="true">
+    <bean id="mainMenu" class="com.hybris.shop.view.menu.Menu" lazy-init="true">
         <constructor-arg ref="input"/>
         <constructor-arg ref="printer"/>
         <constructor-arg ref="userMenu"/>

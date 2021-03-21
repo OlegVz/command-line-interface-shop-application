@@ -1,6 +1,7 @@
-package com.hybris.shop.view.consoleInputOutput;
+package com.hybris.shop.view.consoleInputOutput.impl;
 
 import com.hybris.shop.annotations.ColumnNameAlias;
+import com.hybris.shop.view.consoleInputOutput.PrinterInterface;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -10,16 +11,18 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 //@Component
-public class Printer<T> {
+public class Printer<T> implements PrinterInterface<T> {
 
     private static final String ROW_END = "|\n";
     private int[] columnWidths;
     private List<String> data;
 
+    @Override
     public void printLine(String line) {
         System.out.print(line);
     }
 
+    @Override
     public void printTable(List<T> entity) {
         if (entity.size() == 0) {
             printLine("No data! Can't print table!\n");

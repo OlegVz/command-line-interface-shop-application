@@ -7,11 +7,11 @@ import com.hybris.shop.exceptions.userExceptions.InvalidLoginOrPasswordException
 import com.hybris.shop.exceptions.userExceptions.UserNotFoundByIdException;
 import com.hybris.shop.exceptions.userExceptions.UserWithSuchEmailExistException;
 import com.hybris.shop.facade.UserFacadeInterface;
-import com.hybris.shop.mapper.OrderMapper;
-import com.hybris.shop.mapper.UserMapper;
+import com.hybris.shop.mapper.OrderMapperInterface;
+import com.hybris.shop.mapper.impl.UserMapper;
 import com.hybris.shop.model.Order;
 import com.hybris.shop.model.User;
-import com.hybris.shop.service.impl.UserService;
+import com.hybris.shop.service.UserServiceInterface;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,18 +19,18 @@ import java.util.stream.Collectors;
 //@Component
 public class UserFacade implements UserFacadeInterface {
 
-    private final UserService userService;
+    private final UserServiceInterface userService;
 
     private final UserMapper userMapper;
-    private final OrderMapper orderMapper;
+    private final OrderMapperInterface orderMapperInterface;
 
 //    @Autowired
-    public UserFacade(UserService userService,
+    public UserFacade(UserServiceInterface userService,
                       UserMapper userMapper,
-                      OrderMapper orderMapper) {
+                      OrderMapperInterface orderMapperInterface) {
         this.userService = userService;
         this.userMapper = userMapper;
-        this.orderMapper = orderMapper;
+        this.orderMapperInterface = orderMapperInterface;
     }
 
     @Override
@@ -88,7 +88,7 @@ public class UserFacade implements UserFacadeInterface {
 
         return orders.stream()
                 .distinct()
-                .map(orderMapper::toUserOrdersDto)
+                .map(orderMapperInterface::toUserOrdersDto)
                 .collect(Collectors.toList());
     }
 

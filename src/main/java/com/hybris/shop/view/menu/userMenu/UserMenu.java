@@ -6,30 +6,31 @@ import com.hybris.shop.dto.UserOrdersDto;
 import com.hybris.shop.exceptions.userExceptions.InvalidLoginOrPasswordException;
 import com.hybris.shop.exceptions.userExceptions.UserNotFoundByIdException;
 import com.hybris.shop.facade.impl.UserFacade;
-import com.hybris.shop.util.EmailValidatorUtil;
-import com.hybris.shop.util.PasswordValidatorUtil;
-import com.hybris.shop.view.consoleInputOutput.Input;
-import com.hybris.shop.view.consoleInputOutput.Printer;
+import com.hybris.shop.util.EmailValidatorUtilInterface;
+import com.hybris.shop.util.PasswordValidatorUtilInterface;
+import com.hybris.shop.view.consoleInputOutput.InputInterface;
+import com.hybris.shop.view.consoleInputOutput.PrinterInterface;
 import com.hybris.shop.view.menu.commands.Commands;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.hybris.shop.view.consoleInputOutput.Input.command;
+import static com.hybris.shop.view.consoleInputOutput.impl.Input.command;
 import static com.hybris.shop.view.menu.commands.CommandsValidator.*;
 
 //@Component
 @SuppressWarnings({"unchecked", "rawtypes"})
-public class UserMenu {
+public class UserMenu implements UserMenuInterface {
 
     private static final String SUCCESS_COMMAND = Commands.SUCCESS.getCommand();
+    private static final String BACK_COMMAND = Commands.BACK.getCommand();
 
-    private final Printer printer;
-    private final Input input;
+    private final PrinterInterface printer;
+    private final InputInterface inputInterface;
 
-    private final PasswordValidatorUtil passwordValidatorUtil;
-    private final EmailValidatorUtil emailValidatorUtil;
+    private final PasswordValidatorUtilInterface passwordValidatorUtil;
+    private final EmailValidatorUtilInterface emailValidatorUtil;
 
     private final UserFacade userFacade;
 
@@ -37,23 +38,24 @@ public class UserMenu {
 
     //    @Autowired
     public UserMenu(UserFacade userFacade,
-                    Printer printer,
-                    Input input,
-                    EmailValidatorUtil emailValidatorUtil,
-                    PasswordValidatorUtil passwordValidatorUtil/*,
+                    PrinterInterface printer,
+                    InputInterface inputInterface,
+                    EmailValidatorUtilInterface emailValidatorUtil,
+                    PasswordValidatorUtilInterface passwordValidatorUtil/*,
                     @Lazy MainMenu mainMenu*/) {
         this.userFacade = userFacade;
         this.printer = printer;
-        this.input = input;
+        this.inputInterface = inputInterface;
         this.emailValidatorUtil = emailValidatorUtil;
         this.passwordValidatorUtil = passwordValidatorUtil;
     }
 
+    @Override
     public void menu() {
         do {
             printUserMenu();
 
-            command = input.getCommand();
+            command = inputInterface.getCommand();
             if (isExitCommand(command) || isBAckCommand(command)) {
                 return;
             }
@@ -129,7 +131,7 @@ public class UserMenu {
         do {
             try {
                 printer.printLine("Select user id\n");
-                command = input.getCommand();
+                command = inputInterface.getCommand();
                 if (isExitCommand(command) || isBAckCommand(command)) {
                     break;
                 }
@@ -157,7 +159,7 @@ public class UserMenu {
         do {
             printUpdateCurrentMenu();
 
-            command = input.getCommand();
+            command = inputInterface.getCommand();
             if (isExitCommand(command) || isBAckCommand(command)) {
                 return;
             }
@@ -174,7 +176,7 @@ public class UserMenu {
                     do {
                         printer.printLine("Input new password\n");
 
-                        command = input.getCommand();
+                        command = inputInterface.getCommand();
                         if (isExitCommand(command) || isBAckCommand(command)) {
                             return;
                         }
@@ -208,6 +210,7 @@ public class UserMenu {
         } while (true);
     }
 
+    @Override
     public boolean isPasswordCorrect(String password) {
         return userFacade.chekPassword(currentUserId, password);
     }
@@ -234,6 +237,7 @@ public class UserMenu {
         }
     }
 
+    @Override
     public void userRegistration() {
         NewUserDto newUserDto = new NewUserDto();
 
@@ -272,7 +276,7 @@ public class UserMenu {
         do {
             printer.printLine(String.format("%s\n", msg));
 
-            command = input.getCommand();
+            command = inputInterface.getCommand();
             if (isExitCommand(command) || isBAckCommand(command)) {
                 return;
             }
@@ -290,7 +294,7 @@ public class UserMenu {
         do {
             printer.printLine(msg);
 
-            command = input.getCommand();
+            command = inputInterface.getCommand();
             if (isExitCommand(command) || isBAckCommand(command)) {
                 return;
             }
@@ -304,13 +308,14 @@ public class UserMenu {
         } while (true);
     }
 
+    @Override
     public void userLogin() {
         NewUserDto newUserDto = new NewUserDto();
 
         do {
             printer.printLine("Input login\n");
 
-            command = input.getCommand();
+            command = inputInterface.getCommand();
             if (isExitCommand(command) || isBAckCommand(command)) {
                 return;
             }
@@ -319,7 +324,7 @@ public class UserMenu {
 
             printer.printLine("Input password\n");
 
-            command = input.getCommand();
+            command = inputInterface.getCommand();
             if (isExitCommand(command) || isBAckCommand(command)) {
                 return;
             }
@@ -337,6 +342,7 @@ public class UserMenu {
         command = SUCCESS_COMMAND;
     }
 
+    @Override
     public void printListOfUserOrders() {
         List<UserOrdersDto> allUserOrders = userFacade.findAllUserOrders(currentUserId).stream()
                 .sorted(Comparator.comparingLong(UserOrdersDto::getId))

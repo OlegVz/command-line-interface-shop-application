@@ -4,10 +4,10 @@ import com.hybris.shop.dto.NewOrderDto;
 import com.hybris.shop.dto.OrderDto;
 import com.hybris.shop.dto.UserOrdersDto;
 import com.hybris.shop.facade.OrderFacadeInterface;
-import com.hybris.shop.mapper.OrderMapper;
+import com.hybris.shop.mapper.OrderMapperInterface;
 import com.hybris.shop.model.Order;
 import com.hybris.shop.model.User;
-import com.hybris.shop.service.impl.OrderService;
+import com.hybris.shop.service.ServiceInterface;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -17,14 +17,14 @@ import java.util.stream.Collectors;
 //@Component
 public class OrderFacade implements OrderFacadeInterface {
 
-    private final OrderService orderService;
+    private final ServiceInterface<Order, Long> orderService;
 
-    private final OrderMapper orderMapper;
+    private final OrderMapperInterface orderMapperInterface;
 
 //    @Autowired
-    public OrderFacade(OrderService orderService, OrderMapper orderMapper) {
+    public OrderFacade(ServiceInterface<Order, Long> orderService, OrderMapperInterface orderMapperInterface) {
         this.orderService = orderService;
-        this.orderMapper = orderMapper;
+        this.orderMapperInterface = orderMapperInterface;
     }
 
     @Override
@@ -33,25 +33,25 @@ public class OrderFacade implements OrderFacadeInterface {
         String format = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         newOrderDto.setCreatedAt(format);
 
-        Order savedOrderItem = orderService.save(orderMapper.toEntityFromNewOrderDto(newOrderDto));
+        Order savedOrderItem = orderService.save(orderMapperInterface.toEntityFromNewOrderDto(newOrderDto));
 
-        return orderMapper.toOrderDtoFromEntity(savedOrderItem);
+        return orderMapperInterface.toOrderDtoFromEntity(savedOrderItem);
     }
 
     @Override
     public OrderDto findById(Long id) {
         Order orderById = orderService.findById(id);
 
-        return orderMapper.toOrderDtoFromEntity(orderById);
+        return orderMapperInterface.toOrderDtoFromEntity(orderById);
     }
 
     @Override
     public OrderDto update(Long id, NewOrderDto newOrderDto) {
-        Order newDataObject = orderMapper.toEntityFromNewOrderDto(newOrderDto);
+        Order newDataObject = orderMapperInterface.toEntityFromNewOrderDto(newOrderDto);
         User user = orderService.findById(id).getUser();
         newDataObject.setUser(user);
 
-        return orderMapper.toOrderDtoFromEntity(orderService.update(id, newDataObject));
+        return orderMapperInterface.toOrderDtoFromEntity(orderService.update(id, newDataObject));
     }
 
     @Override
@@ -67,7 +67,7 @@ public class OrderFacade implements OrderFacadeInterface {
     @Override
     public List<OrderDto> findAll() {
         return orderService.findAll().stream()
-                .map(orderMapper::toOrderDtoFromEntity)
+                .map(orderMapperInterface::toOrderDtoFromEntity)
                 .collect(Collectors.toList());
     }
 
@@ -77,7 +77,7 @@ public class OrderFacade implements OrderFacadeInterface {
 
         return orders.stream()
                 .distinct()
-                .map(orderMapper::toUserOrdersDto)
+                .map(orderMapperInterface::toUserOrdersDto)
                 .collect(Collectors.toList());
     }
 }

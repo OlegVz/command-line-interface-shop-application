@@ -5,46 +5,48 @@ import com.hybris.shop.dto.ProductDto;
 import com.hybris.shop.exceptions.productExceptions.ProductNotFoundByIdException;
 import com.hybris.shop.facade.impl.ProductFacade;
 import com.hybris.shop.model.Product;
-import com.hybris.shop.view.consoleInputOutput.Input;
-import com.hybris.shop.view.consoleInputOutput.Printer;
+import com.hybris.shop.view.consoleInputOutput.InputInterface;
+import com.hybris.shop.view.consoleInputOutput.PrinterInterface;
+import com.hybris.shop.view.menu.MenuInterface;
 import com.hybris.shop.view.menu.commands.CommandsValidator;
-import com.hybris.shop.view.menu.userMenu.UserMenu;
+import com.hybris.shop.view.menu.userMenu.UserMenuInterface;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 
-import static com.hybris.shop.view.consoleInputOutput.Input.command;
+import static com.hybris.shop.view.consoleInputOutput.impl.Input.command;
 import static com.hybris.shop.view.menu.commands.CommandsValidator.*;
 
 //@Component
 @SuppressWarnings({"unchecked", "rawtypes"})
-public class ProductMenu {
+public class ProductMenu implements MenuInterface {
 
-    private final Printer printer;
-    private final Input input;
+    private final PrinterInterface printer;
+    private final InputInterface inputInterface;
 
     private final ProductFacade productFacade;
 
-    private final UserMenu userMenu;
+    private final UserMenuInterface userMenuInterface;
 
 //    @Autowired
-    public ProductMenu(Printer printer,
-                       Input input,
+    public ProductMenu(PrinterInterface printer,
+                       InputInterface inputInterface,
                        ProductFacade productFacade,
-                       UserMenu userMenu) {
+                       UserMenuInterface userMenuInterface) {
         this.printer = printer;
-        this.input = input;
+        this.inputInterface = inputInterface;
         this.productFacade = productFacade;
-        this.userMenu = userMenu;
+        this.userMenuInterface = userMenuInterface;
     }
 
+    @Override
     public void menu() {
         do {
             printProductMenu();
 
-            command = input.getCommand();
+            command = inputInterface.getCommand();
             if (isExitCommand(command) || isBAckCommand(command)) {
                 return;
             }
@@ -98,7 +100,7 @@ public class ProductMenu {
         do {
             printUpdateProductMenu();
 
-            command = input.getCommand();
+            command = inputInterface.getCommand();
             if (isExitCommand(command) || isBAckCommand(command)) {
                 return;
             }
@@ -109,7 +111,7 @@ public class ProductMenu {
 
                     do {
                         printer.printLine("Input new product name\n");
-                        command = input.getCommand();
+                        command = inputInterface.getCommand();
                         if (isExitCommand(command) || isBAckCommand(command)) {
                             return;
                         }
@@ -133,7 +135,7 @@ public class ProductMenu {
                     printUpdateProductStatusMenu();
 
                     do {
-                        command = input.getCommand();
+                        command = inputInterface.getCommand();
                         if (isExitCommand(command) || isBAckCommand(command)) {
                             return;
                         }
@@ -180,13 +182,13 @@ public class ProductMenu {
         if (confirmCommand("Delete all products?")) {
             do {
                 printer.printLine("Input password\n");
-                command = input.getCommand();
+                command = inputInterface.getCommand();
 
                 if (isExitCommand(command) || isBAckCommand(command)) {
                     return;
                 }
 
-                if (userMenu.isPasswordCorrect(command)) {
+                if (userMenuInterface.isPasswordCorrect(command)) {
                     productFacade.deleteAll();
                     printer.printLine("All products removed\n");
                     return;
@@ -247,12 +249,12 @@ public class ProductMenu {
         if (confirmCommand("Remove product?")) {
             do {
                 printer.printLine("Input password\n");
-                command = input.getCommand();
+                command = inputInterface.getCommand();
                 if (isExitCommand(command) || isBAckCommand(command)) {
                     return;
                 }
 
-                if (userMenu.isPasswordCorrect(command)) {
+                if (userMenuInterface.isPasswordCorrect(command)) {
                     productFacade.deleteById(productId);
                     printer.printLine("Product removed\n");
                     return;
@@ -271,7 +273,7 @@ public class ProductMenu {
             try {
                 printer.printLine("Select product id\n");
 
-                command = input.getCommand();
+                command = inputInterface.getCommand();
                 if (isExitCommand(command) || isBAckCommand(command)) {
                     break;
                 }
@@ -337,7 +339,7 @@ public class ProductMenu {
         do {
             printProductStatusMenu();
 
-            command = input.getCommand();
+            command = inputInterface.getCommand();
             if (isExitCommand(command) || isBAckCommand(command)) {
                 return null;
             }
@@ -361,7 +363,7 @@ public class ProductMenu {
         do {
             printer.printLine("Product name\n");
 
-            command = input.getCommand();
+            command = inputInterface.getCommand();
             if (isExitCommand(command) || isBAckCommand(command)) {
                 return command;
             }
@@ -383,7 +385,7 @@ public class ProductMenu {
         do {
             try {
                 printer.printLine("Product price\n");
-                command = input.getCommand();
+                command = inputInterface.getCommand();
                 if (isExitCommand(command) || isBAckCommand(command)) {
                     break;
                 }

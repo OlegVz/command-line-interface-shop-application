@@ -1,8 +1,9 @@
-package com.hybris.shop.mapper;
+package com.hybris.shop.mapper.impl;
 
 import com.hybris.shop.dto.NewOrderDto;
 import com.hybris.shop.dto.OrderDto;
 import com.hybris.shop.dto.UserOrdersDto;
+import com.hybris.shop.mapper.OrderMapperInterface;
 import com.hybris.shop.model.Order;
 import com.hybris.shop.model.OrderItem;
 import com.hybris.shop.model.User;
@@ -16,7 +17,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 //@Component
-public class OrderMapper {
+public class OrderMapper implements OrderMapperInterface {
 
     private final ModelMapper modelMapper;
     private final OrderItemRepository orderItemRepository;
@@ -28,6 +29,7 @@ public class OrderMapper {
         this.orderItemRepository = orderItemRepository;
     }
 
+    @Override
     @PostConstruct
     public void setupMapper() {
         modelMapper.createTypeMap(NewOrderDto.class, Order.class).setPostConverter(
@@ -80,14 +82,17 @@ public class OrderMapper {
         );
     }
 
+    @Override
     public OrderDto toOrderDtoFromEntity(Order order) {
         return Objects.isNull(order) ? null : modelMapper.map(order, OrderDto.class);
     }
 
+    @Override
     public Order toEntityFromNewOrderDto(NewOrderDto newOrderDto) {
         return Objects.isNull(newOrderDto) ? null : modelMapper.map(newOrderDto, Order.class);
     }
 
+    @Override
     public UserOrdersDto toUserOrdersDto(Order order) {
         return Objects.isNull(order) ? null : modelMapper.map(order, UserOrdersDto.class);
     }

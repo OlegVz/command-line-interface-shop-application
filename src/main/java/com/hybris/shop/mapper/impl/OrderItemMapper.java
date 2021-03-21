@@ -1,8 +1,11 @@
-package com.hybris.shop.mapper;
+package com.hybris.shop.mapper.impl;
 
 import com.hybris.shop.dto.NewOrderItemDto;
 import com.hybris.shop.dto.OrderItemDto;
 import com.hybris.shop.dto.orderItemDtosId.OrderItemDtoId;
+import com.hybris.shop.mapper.OrderItemMapperInterface;
+import com.hybris.shop.mapper.OrderMapperInterface;
+import com.hybris.shop.mapper.ProductMapperInterface;
 import com.hybris.shop.model.Order;
 import com.hybris.shop.model.OrderItem;
 import com.hybris.shop.model.Product;
@@ -18,28 +21,28 @@ import java.util.Objects;
 import java.util.Optional;
 
 //@Component
-public class OrderItemMapper {
+public class OrderItemMapper implements OrderItemMapperInterface {
 
     private final ModelMapper modelMapper;
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final OrderItemRepository orderItemRepository;
-    private final ProductMapper productMapper;
-    private final OrderMapper orderMapper;
+    private final ProductMapperInterface productMapperInterface;
+    private final OrderMapperInterface orderMapperInterface;
 
 //    @Autowired
     public OrderItemMapper(ModelMapper modelMapper,
                            OrderRepository orderRepository,
                            ProductRepository productRepository,
                            OrderItemRepository orderItemRepository,
-                           ProductMapper productMapper,
-                           OrderMapper orderMapper) {
+                           ProductMapperInterface productMapperInterface,
+                           OrderMapperInterface orderMapperInterface) {
         this.modelMapper = modelMapper;
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
         this.orderItemRepository = orderItemRepository;
-        this.productMapper = productMapper;
-        this.orderMapper = orderMapper;
+        this.productMapperInterface = productMapperInterface;
+        this.orderMapperInterface = orderMapperInterface;
     }
 
     @PostConstruct
@@ -69,8 +72,8 @@ public class OrderItemMapper {
                     source.getProduct().setOrderItems(allByProductId);
                     source.getOrder().setOrderItems(allByOrderId);
 
-                    destination.setProduct(productMapper.fromEntityToProductDto(source.getProduct()));
-                    destination.setOrder(orderMapper.toOrderDtoFromEntity(source.getOrder()));
+                    destination.setProduct(productMapperInterface.fromEntityToProductDto(source.getProduct()));
+                    destination.setOrder(orderMapperInterface.toOrderDtoFromEntity(source.getOrder()));
                     destination.setQuantity(source.getQuantity());
 
                     return destination;
@@ -78,14 +81,17 @@ public class OrderItemMapper {
         );
     }
 
+    @Override
     public OrderItem toEntityFromNewOrderItemDto(NewOrderItemDto newOrderItemDto) {
         return Objects.isNull(newOrderItemDto) ? null : modelMapper.map(newOrderItemDto, OrderItem.class);
     }
 
+    @Override
     public OrderItemDto toOrderItemDtoFromEntity(OrderItem orderItem) {
         return Objects.isNull(orderItem) ? null : modelMapper.map(orderItem, OrderItemDto.class);
     }
 
+    @Override
     public OrderItemId fromOrderItemDtoIdToOrderItemId(OrderItemDtoId orderItemDtoId) {
         return Objects.isNull(orderItemDtoId) ? null : modelMapper.map(orderItemDtoId, OrderItemId.class);
     }
