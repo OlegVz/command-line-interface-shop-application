@@ -11,11 +11,12 @@ import org.springframework.context.annotation.PropertySource;
 public class ShopApplication {
 
     public static void main(String[] args) {
-        ConfigurableApplicationContext context = SpringApplication.run(ShopApplication.class, args);
-
-        MainMenu mainMenu = context.getBean(MainMenu.class);
-        mainMenu.menu();
-
-        context.close();
+    SpringApplication.run(ShopApplication.class, args);
+//        ConfigurableApplicationContext context = SpringApplication.run(ShopApplication.class, args);
+//
+//        MainMenu mainMenu = context.getBean(MainMenu.class);
+//        mainMenu.menu();
+//
+//        context.close();
     }
 }
