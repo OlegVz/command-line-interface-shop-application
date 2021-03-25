@@ -37,7 +37,7 @@ public class UserController {
 
     @GetMapping("/user-by-id")
     public String getUserById(HttpServletRequest request, Model model) {
-//        long id = Long.parseLong(request.getParameter("id"));
+//        long id1 = Long.parseLong(request.getParameter("id"));
         Long id = 5L;
         UserDto userById = userFacade.findById(id);
         model.addAttribute("user", userById.toString());
