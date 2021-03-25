@@ -32,12 +32,12 @@ public class UserController {
 
         model.addAttribute("users", allUsers);
 
-        return "userList";
+        return "views/user/userList";
     }
 
     @GetMapping("/user-by-id")
     public String getUserById(HttpServletRequest request, Model model) {
-//        long id1 = Long.parseLong(request.getParameter("id"));
+//        long id = Long.parseLong(request.getParameter("id"));
         Long id = 5L;
         UserDto userById = userFacade.findById(id);
         model.addAttribute("user", userById.toString());
