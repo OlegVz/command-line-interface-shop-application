@@ -6,61 +6,56 @@ import com.hybris.shop.dto.UserOrdersDto;
 import com.hybris.shop.exceptions.userExceptions.InvalidLoginOrPasswordException;
 import com.hybris.shop.exceptions.userExceptions.UserNotFoundByIdException;
 import com.hybris.shop.facade.impl.UserFacade;
-import com.hybris.shop.util.EmailValidatorUtil;
-import com.hybris.shop.util.PasswordValidatorUtil;
-import com.hybris.shop.view.consoleInputOutput.Input;
-import com.hybris.shop.view.consoleInputOutput.Printer;
-import com.hybris.shop.view.menu.MainMenu;
+import com.hybris.shop.util.EmailValidatorUtilInterface;
+import com.hybris.shop.util.PasswordValidatorUtilInterface;
+import com.hybris.shop.view.consoleInputOutput.InputInterface;
+import com.hybris.shop.view.consoleInputOutput.PrinterInterface;
 import com.hybris.shop.view.menu.commands.Commands;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Component;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.hybris.shop.view.consoleInputOutput.Input.command;
+import static com.hybris.shop.view.consoleInputOutput.impl.Input.command;
 import static com.hybris.shop.view.menu.commands.CommandsValidator.*;
 
-@Component
+//@Component
 @SuppressWarnings({"unchecked", "rawtypes"})
-public class UserMenu {
+public class UserMenu implements UserMenuInterface {
 
     private static final String SUCCESS_COMMAND = Commands.SUCCESS.getCommand();
+    private static final String BACK_COMMAND = Commands.BACK.getCommand();
 
-    private final Printer printer;
-    private final Input input;
+    private final PrinterInterface printer;
+    private final InputInterface inputInterface;
 
-    private final PasswordValidatorUtil passwordValidatorUtil;
-    private final EmailValidatorUtil emailValidatorUtil;
+    private final PasswordValidatorUtilInterface passwordValidatorUtil;
+    private final EmailValidatorUtilInterface emailValidatorUtil;
 
     private final UserFacade userFacade;
 
-    private final MainMenu mainMenu;
-
     public static Long currentUserId;
 
-    @Autowired
+    //    @Autowired
     public UserMenu(UserFacade userFacade,
-                    Printer printer,
-                    Input input,
-                    EmailValidatorUtil emailValidatorUtil,
-                    PasswordValidatorUtil passwordValidatorUtil,
-                    @Lazy MainMenu mainMenu) {
+                    PrinterInterface printer,
+                    InputInterface inputInterface,
+                    EmailValidatorUtilInterface emailValidatorUtil,
+                    PasswordValidatorUtilInterface passwordValidatorUtil/*,
+                    @Lazy MainMenu mainMenu*/) {
         this.userFacade = userFacade;
         this.printer = printer;
-        this.input = input;
+        this.inputInterface = inputInterface;
         this.emailValidatorUtil = emailValidatorUtil;
         this.passwordValidatorUtil = passwordValidatorUtil;
-        this.mainMenu = mainMenu;
     }
 
+    @Override
     public void menu() {
         do {
             printUserMenu();
 
-            command = input.getCommand();
+            command = inputInterface.getCommand();
             if (isExitCommand(command) || isBAckCommand(command)) {
                 return;
             }
@@ -74,9 +69,15 @@ public class UserMenu {
                     break;
                 case "3":
                     logOut();
+                    if (isLogOutCommand(command)) {
+                        return;
+                    }
                     break;
                 case "4":
                     deleteCurrentUser();
+                    if (isLogOutCommand(command)) {
+                        return;
+                    }
                     break;
                 case "5":
                     deleteUserById();
@@ -130,7 +131,7 @@ public class UserMenu {
         do {
             try {
                 printer.printLine("Select user id\n");
-                command = input.getCommand();
+                command = inputInterface.getCommand();
                 if (isExitCommand(command) || isBAckCommand(command)) {
                     break;
                 }
@@ -158,7 +159,7 @@ public class UserMenu {
         do {
             printUpdateCurrentMenu();
 
-            command = input.getCommand();
+            command = inputInterface.getCommand();
             if (isExitCommand(command) || isBAckCommand(command)) {
                 return;
             }
@@ -175,7 +176,7 @@ public class UserMenu {
                     do {
                         printer.printLine("Input new password\n");
 
-                        command = input.getCommand();
+                        command = inputInterface.getCommand();
                         if (isExitCommand(command) || isBAckCommand(command)) {
                             return;
                         }
@@ -209,6 +210,7 @@ public class UserMenu {
         } while (true);
     }
 
+    @Override
     public boolean isPasswordCorrect(String password) {
         return userFacade.chekPassword(currentUserId, password);
     }
@@ -225,21 +227,17 @@ public class UserMenu {
     private void deleteCurrentUser() {
         if (confirmCommand("Confirm delete user?")) {
             userFacade.deleteById(currentUserId);
-            returnToMainMenu();
+            command = Commands.LOGOUT.getCommand();
         }
     }
 
     private void logOut() {
         if (confirmCommand("Log out?")) {
-            returnToMainMenu();
+            command = Commands.LOGOUT.getCommand();
         }
     }
 
-    private void returnToMainMenu() {
-        currentUserId = null;
-        mainMenu.menu();
-    }
-
+    @Override
     public void userRegistration() {
         NewUserDto newUserDto = new NewUserDto();
 
@@ -278,7 +276,7 @@ public class UserMenu {
         do {
             printer.printLine(String.format("%s\n", msg));
 
-            command = input.getCommand();
+            command = inputInterface.getCommand();
             if (isExitCommand(command) || isBAckCommand(command)) {
                 return;
             }
@@ -296,7 +294,7 @@ public class UserMenu {
         do {
             printer.printLine(msg);
 
-            command = input.getCommand();
+            command = inputInterface.getCommand();
             if (isExitCommand(command) || isBAckCommand(command)) {
                 return;
             }
@@ -310,13 +308,14 @@ public class UserMenu {
         } while (true);
     }
 
+    @Override
     public void userLogin() {
         NewUserDto newUserDto = new NewUserDto();
 
         do {
             printer.printLine("Input login\n");
 
-            command = input.getCommand();
+            command = inputInterface.getCommand();
             if (isExitCommand(command) || isBAckCommand(command)) {
                 return;
             }
@@ -325,7 +324,7 @@ public class UserMenu {
 
             printer.printLine("Input password\n");
 
-            command = input.getCommand();
+            command = inputInterface.getCommand();
             if (isExitCommand(command) || isBAckCommand(command)) {
                 return;
             }
@@ -343,6 +342,7 @@ public class UserMenu {
         command = SUCCESS_COMMAND;
     }
 
+    @Override
     public void printListOfUserOrders() {
         List<UserOrdersDto> allUserOrders = userFacade.findAllUserOrders(currentUserId).stream()
                 .sorted(Comparator.comparingLong(UserOrdersDto::getId))

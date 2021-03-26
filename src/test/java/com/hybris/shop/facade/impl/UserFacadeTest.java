@@ -3,8 +3,8 @@ package com.hybris.shop.facade.impl;
 import com.hybris.shop.dto.NewUserDto;
 import com.hybris.shop.dto.UserDto;
 import com.hybris.shop.exceptions.userExceptions.UserNotFoundByIdException;
-import com.hybris.shop.mapper.OrderMapper;
-import com.hybris.shop.mapper.UserMapper;
+import com.hybris.shop.mapper.OrderMapperInterface;
+import com.hybris.shop.mapper.impl.UserMapper;
 import com.hybris.shop.model.User;
 import com.hybris.shop.service.impl.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,7 +44,7 @@ class UserFacadeTest {
     private UserMapper userMapper;
 
     @Mock
-    private OrderMapper orderMapper;
+    private OrderMapperInterface orderMapperInterface;
 
     @BeforeEach
     void init() {

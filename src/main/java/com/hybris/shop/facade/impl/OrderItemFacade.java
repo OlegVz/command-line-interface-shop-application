@@ -5,25 +5,23 @@ import com.hybris.shop.dto.OrderItemDto;
 import com.hybris.shop.dto.orderItemDtosId.OrderItemDtoId;
 import com.hybris.shop.exceptions.orderItemExceptions.OrderItemNotFoundByIdException;
 import com.hybris.shop.facade.OrderItemFacadeInterface;
-import com.hybris.shop.mapper.OrderItemMapper;
+import com.hybris.shop.mapper.impl.OrderItemMapper;
 import com.hybris.shop.model.OrderItem;
 import com.hybris.shop.model.idClasses.OrderItemId;
-import com.hybris.shop.service.impl.OrderItemService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import com.hybris.shop.service.ServiceInterface;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
+//@Component
 public class OrderItemFacade implements OrderItemFacadeInterface {
 
-    private final OrderItemService orderItemService;
+    private final ServiceInterface<OrderItem, OrderItemId> orderItemService;
 
     private final OrderItemMapper orderItemMapper;
 
-    @Autowired
-    public OrderItemFacade(OrderItemService orderItemService, OrderItemMapper orderItemMapper) {
+//    @Autowired
+    public OrderItemFacade(ServiceInterface<OrderItem, OrderItemId> orderItemService, OrderItemMapper orderItemMapper) {
         this.orderItemService = orderItemService;
         this.orderItemMapper = orderItemMapper;
     }

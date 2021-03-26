@@ -1,6 +1,7 @@
 package com.hybris.shop.util;
 
 import com.hybris.shop.ShopApplication;
+import com.hybris.shop.util.impl.PasswordValidatorUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

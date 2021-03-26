@@ -10,11 +10,10 @@ import com.hybris.shop.facade.impl.ProductFacade;
 import com.hybris.shop.facade.impl.UserFacade;
 import com.hybris.shop.model.Order;
 import com.hybris.shop.model.Product;
-import com.hybris.shop.view.consoleInputOutput.Input;
-import com.hybris.shop.view.consoleInputOutput.Printer;
-import com.hybris.shop.view.menu.userMenu.UserMenu;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import com.hybris.shop.view.consoleInputOutput.InputInterface;
+import com.hybris.shop.view.consoleInputOutput.PrinterInterface;
+import com.hybris.shop.view.menu.MenuInterface;
+import com.hybris.shop.view.menu.userMenu.UserMenuInterface;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,46 +21,47 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static com.hybris.shop.view.consoleInputOutput.Input.command;
+import static com.hybris.shop.view.consoleInputOutput.impl.Input.command;
 import static com.hybris.shop.view.menu.commands.CommandsValidator.*;
 import static com.hybris.shop.view.menu.userMenu.UserMenu.currentUserId;
 
-@Component
+//@Component
 @SuppressWarnings({"unchecked", "rawtypes"})
-public class OrderMenu {
+public class OrderMenu implements MenuInterface {
 
-    private final Printer printer;
-    private final Input input;
+    private final PrinterInterface printer;
+    private final InputInterface inputInterface;
 
     private final OrderFacade orderFacade;
     private final ProductFacade productFacade;
     private final OrderItemFacade orderItemFacade;
     private final UserFacade userFacade;
 
-    private final UserMenu userMenu;
+    private final UserMenuInterface userMenuInterface;
 
-    @Autowired
+//    @Autowired
     public OrderMenu(OrderFacade orderFacade,
-                     Printer printer,
-                     Input input,
+                     PrinterInterface printer,
+                     InputInterface inputInterface,
                      ProductFacade productFacade,
                      OrderItemFacade orderItemFacade,
                      UserFacade userFacade,
-                     UserMenu userMenu) {
+                     UserMenuInterface userMenuInterface) {
         this.orderFacade = orderFacade;
         this.printer = printer;
-        this.input = input;
+        this.inputInterface = inputInterface;
         this.productFacade = productFacade;
         this.orderItemFacade = orderItemFacade;
         this.userFacade = userFacade;
-        this.userMenu = userMenu;
+        this.userMenuInterface = userMenuInterface;
     }
 
+    @Override
     public void menu() {
         do {
             printOrderMenu();
 
-            command = input.getCommand();
+            command = inputInterface.getCommand();
             if (isExitCommand(command) || isBAckCommand(command)) {
                 return;
             }
@@ -106,7 +106,7 @@ public class OrderMenu {
         printUpdateOrderMenu();
 
         NewOrderDto newOrderDto = new NewOrderDto();
-        userMenu.printListOfUserOrders();
+        userMenuInterface.printListOfUserOrders();
 
         if (isBAckCommand(command)) {
             return;
@@ -118,7 +118,7 @@ public class OrderMenu {
         }
 
         do {
-            command = input.getCommand();
+            command = inputInterface.getCommand();
             if (isExitCommand(command) || isBAckCommand(command)) {
                 return;
             }
@@ -143,7 +143,7 @@ public class OrderMenu {
     }
 
     private void deleteOrder() {
-        userMenu.printListOfUserOrders();
+        userMenuInterface.printListOfUserOrders();
 
         if (isBAckCommand(command)) {
             return;
@@ -174,7 +174,7 @@ public class OrderMenu {
             try {
                 printer.printLine("Select order id\n");
 
-                command = input.getCommand();
+                command = inputInterface.getCommand();
                 if (isExitCommand(command) || isBAckCommand(command)) {
                     break;
                 }
@@ -261,7 +261,7 @@ public class OrderMenu {
         do {
             try {
                 printer.printLine("Select product quantity\n");
-                command = input.getCommand();
+                command = inputInterface.getCommand();
                 if (isExitCommand(command) || isBAckCommand(command)) {
                     break;
                 }
@@ -289,7 +289,7 @@ public class OrderMenu {
         do {
             try {
                 printer.printLine("Select product id to order\n");
-                command = input.getCommand();
+                command = inputInterface.getCommand();
                 if (isExitCommand(command) || isBAckCommand(command)) {
                     break;
                 }
