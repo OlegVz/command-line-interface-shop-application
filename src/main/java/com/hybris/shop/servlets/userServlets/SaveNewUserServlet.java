@@ -5,23 +5,34 @@ package com.hybris.shop.servlets.userServlets;
 //import jakarta.servlet.http.HttpServletRequest;
 //import jakarta.servlet.http.HttpServletResponse;
 
+import com.hybris.shop.dto.NewUserDto;
+import com.hybris.shop.facade.impl.UserFacade;
+import org.springframework.web.HttpRequestHandler;
+
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 
-public class SaveNewUserServlet extends HttpServlet {
-//    @Override
-//    public void init() throws ServletException {
-//
-//    }
+public class SaveNewUserServlet implements HttpRequestHandler {
+    private UserFacade userFacade;
 
+    public SaveNewUserServlet() {
+    }
+
+    public SaveNewUserServlet(UserFacade userFacade) {
+        this.userFacade = userFacade;
+    }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        PrintWriter writer = resp.getWriter();
-        writer.println("SaveNewUserServlet");
+    public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+
+        NewUserDto newUserDto = new NewUserDto();
+        newUserDto.setEmail(email);
+        newUserDto.setPassword(password);
+        userFacade.save(newUserDto);
     }
 }
+
