@@ -1,9 +1,7 @@
 package com.hybris.shop;
 
-import com.hybris.shop.view.menu.MainMenu;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.PropertySource;
 
 @SpringBootApplication
