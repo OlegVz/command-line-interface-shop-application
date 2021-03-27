@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Updated user</title>
+</head>
+<body>
+<h1>Updated user</h1>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Email</th>
+    </tr>
+    <tr th="${user}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.email}"></td>
+        <td></td>
+    </tr>
+</table>
+<button onclick="location.href='/'">Back to main</button>
+</body>
+</html>
