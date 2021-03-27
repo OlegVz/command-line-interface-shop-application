@@ -5,13 +5,13 @@
     <title>ShopApp</title>
 </head>
 <body>
-<h1>Users List</h1>
+<h1>Find user by ID</h1>
 <table>
     <tr>
         <th>ID</th>
         <th>Email</th>
     </tr>
-    <tr th:each="user : ${users}">
+    <tr th="${user}">
         <td th:text="${user.id}"></td>
         <td th:text="${user.email}"></td>
         <td></td>
